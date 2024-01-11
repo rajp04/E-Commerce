@@ -34,7 +34,7 @@ function Register() {
           );
 
           if (res.data === 1) {
-            console.log("User registered successfully!");
+            console.log("User registered successfully!")
             navigate("/login");
           } else {
             console.log(res.data);

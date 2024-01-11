@@ -1,4 +1,4 @@
-const userSchema = require("../models/User.js");
+const userSchema = require("../models/user.js");
 const User = userSchema;
 
 // register controller
