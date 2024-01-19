@@ -4,7 +4,8 @@ const User = userSchema;
 // register controller
 module.exports.register = async (req, res) => {
   try {
-    const { fullName, email, mobile, password, avatar, otp, block } = req.body;
+    const { fullName, email, mobile, password } = req.body;
+
     if (!fullName && !email && !password && !mobile) {
       return res.json({
         success: 0,
@@ -12,8 +13,8 @@ module.exports.register = async (req, res) => {
       });
     }
 
-    // Check if the user already exists
-    const existUser = await User.findOne({ email });
+    // check if the user is already registered or not
+    const existUser = await User.findOne({ mobile });
     if (existUser) {
       return res.json({
         success: 0,
@@ -21,20 +22,18 @@ module.exports.register = async (req, res) => {
       });
     }
 
-    // Create the user
+    // Create the <user></user>
     await User.create({
       fullName,
       email,
       mobile,
       password,
-      avatar,
-      otp,
-      block,
     });
 
     res.json({
       success: 1,
       message: "User registered successfully",
+      message
     });
   } catch (error) {
     // Log the error message for debugging
@@ -126,3 +125,14 @@ module.exports.usersData = async (req, res) => {
     res.status(500).json({ success: 0, message: "Internal Server Error" });
   }
 };
+
+// avatar controller
+module.exports.avatar = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const avatar = `http://localhost:5555/public/temp/${req.file.filename}`
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: 0, message: "Internal Server Error" });
+  }
+}

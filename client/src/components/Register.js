@@ -33,14 +33,14 @@ function Register() {
             values
           );
 
-          if (res.data === 1) {
+          if (res) {
             console.log("User registered successfully!")
             navigate("/login");
           } else {
             console.log(res.data);
           }
         } catch (error) {
-          console.error("Error during registration:", error);
+          console.error("Error during   registration:", error);
           console.log("Error during registration. Please try again.");
         }
         action.resetForm();

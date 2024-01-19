@@ -10,7 +10,7 @@ function Header() {
     return (
         <>
             <div className='flex justify-between items-center h-16 xl:px-28 lg:px-16 md:px-6 px-2'>
-                <div className='flex items-center' onClick={() => navigate('/')}>
+                <div className='flex items-center' onClick={() => navigate("/")}>
                     <img src={require('../image/logo.png')} className='bg-blue-500 p-2 h-9 w-10 rounded-md text-white ' alt="" />
                     <h1 className='text-blue-300 text-3xl font-bold md:ps-2 cursor-pointer'>Brand</h1>
                 </div>
@@ -23,9 +23,9 @@ function Header() {
                     <h1 className='border-y-2 border-e-2 border-blue-500 border bg-blue-500 rounded-e-md py-1 md:px-5 px-1 text-white'>Search</h1>
                 </div>
                 <div className='flex items-center justify-center text-gray-500 lg:space-x-4 space-x-1'>
-                    <div className='flex-col flex items-center justify-center max-[250px]:hidden cursor-pointer' onClick={() => navigate('/profile')}>
+                    <div className='flex-col flex items-center justify-center max-[250px]:hidden cursor-pointer' onClick={() => navigate('/account')}>
                         <FaUserLarge className='md:text-xl' />
-                        <h1 className='text-sm'  >Profile</h1>
+                        <h1 className='text-sm'  >Account</h1>
                     </div>
                     <div className='flex-col flex items-center justify-center max-[350px]:hidden'>
                         <BiSolidMessageDetail className='md:text-xl' />

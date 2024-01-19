@@ -6,7 +6,7 @@ dotenv.config()
 const app = express()
 const port = process.env.PORT || 3020
 const database = require("./database/db.js")
-const Userrouter = require('./routes/routes.js')
+const Userrouter = require('./routes/user.js')
 
 app.use(cors())
 app.use(express.json({ limit: "16kb" }))

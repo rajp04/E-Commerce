@@ -53,7 +53,8 @@ function View() {
                                 <FaCheck className=' me-2' />
                                 <p>In stock</p>
                             </div>
-                            <h1 className='font-semibold text-2xl pb-2'>Mens Long Sleeve T-shirt Cotton Base Layer Slim Muscle</h1>
+                            <h1 className='font-semibold text-2xl'>Men's T-Shirt</h1>
+                            <h1 className='font-semibold text-2xl pb-2 text-gray-500'>Mens Long Sleeve T-shirt Cotton Base Layer Slim Muscle</h1>
                             <div className='flex flex-wrap items-center'>
                                 <div className='text-orange-500 flex'>
                                     <IoStar />

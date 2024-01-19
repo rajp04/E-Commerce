@@ -9,4 +9,5 @@ router.route("/profile/:id").get(userController.profile);
 router.route("/updateprofile/:id").post(userController.updateProfile);
 router.route("/changepassword/:id").post(userController.changePassword);
 router.route("/userdata").get(userController.usersData);
+router.route("/account").post()
 module.exports = router;
