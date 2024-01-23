@@ -1,6 +1,7 @@
 import React from 'react'
 import { FaAngleRight, FaCheck, FaRegHeart } from "react-icons/fa";
 import { IoStar, IoStarHalf, IoBasketSharp } from "react-icons/io5";
+import { FaIndianRupeeSign } from "react-icons/fa6";
 import { BsDot } from "react-icons/bs";
 import { MdMessage, MdSecurity } from "react-icons/md";
 import { TbWorld } from "react-icons/tb";
@@ -71,27 +72,13 @@ function View() {
                                 <IoBasketSharp className='me-2 text-lg' />
                                 <p>154 sold</p>
                             </div>
-                            <div className='bg-pink-200 flex mt-3'>
-                                <div className='flex flex-wrap'>
-                                    <div className='p-3 pe-3 border-e-2 border-gray-400'>
-                                        <h1 className='text-red-600 text-lg font-semibold'>$98.00</h1>
-                                        <p>050-100 pcs</p>
-                                    </div>
-                                    <div className='p-3 border-e-2 border-gray-400 pe-3'>
-                                        <h1 className='text-red-600 text-lg font-semibold'>$90.00</h1>
-                                        <p>100-700 pcs</p>
-                                    </div>
-                                    <hr />
-                                    <div className='p-3 border-e-2 border-gray-400 pe-8'>
-                                        <h1 className='text-red-600 text-lg font-semibold'>$78.00</h1>
-                                        <p>700+ pcs</p>
-                                    </div>
-                                </div>
-                            </div>
                             <div className='text-gray-500'>
                                 <div className='flex my-3'>
-                                    <h1 className='w-32'>Price:</h1>
-                                    <p>Negotiable</p>
+                                    <h1 className='w-32 text-xl text-black font-bold'>Price:</h1>
+                                    <div className='flex items-center text-xl text-black font-bold'>
+                                        <FaIndianRupeeSign />
+                                        <h1 className='text-2xl text-black'>8555</h1>
+                                    </div>
                                 </div>
                                 <hr />
                                 <div className='flex mt-3'>

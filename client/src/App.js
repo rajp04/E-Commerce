@@ -15,6 +15,7 @@ import Product from './components/Admin/Product.js'
 import AddProduct from './components/Admin/AddProduct.js'
 import OrderHistory from './components/Admin/OrderHistory.js'
 import ProductList from './components/Admin/ProductList.js'
+import AdminLogin from './components/Admin/Login.js'
 
 function App() {
     return (
@@ -28,6 +29,7 @@ function App() {
                 <Route path='/login' element={<Login />} />
                 <Route path='/account' element={<Account />} />
                 <Route path='/profile' element={<Profile />} />
+                <Route path='/admin/login' element={<AdminLogin />} />
                 <Route path='/admin/' element={<Dashboard />} >
                     <Route path='' element={<Homes />} />
                     <Route path='user' element={<User />} />

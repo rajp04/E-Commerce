@@ -21,7 +21,7 @@ function OrderHistory() {
         </div>
         <h1 className='col-span-2 text-center'>M</h1>
         <h1 className='col-span-2 text-center'>5</h1>
-        <div className='flex items-center justify-center'>
+        <div className='col-span-2 flex items-center justify-center'>
           <FaIndianRupeeSign />
           <h1>120</h1>
         </div>

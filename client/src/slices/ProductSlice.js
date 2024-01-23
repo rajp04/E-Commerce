@@ -1,5 +1,5 @@
 // nanoid use for unique id
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 
 const initialState = {

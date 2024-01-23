@@ -6,7 +6,9 @@ dotenv.config()
 const app = express()
 const port = process.env.PORT || 3020
 const database = require("./database/db.js")
-const Userrouter = require('./routes/user.js')
+const userRouter = require('./routes/userRoutes.js')
+const adminRouter = require("./routes/adminRoutes.js")
+const productRouter = require("./routes/productRoutes.js")
 
 app.use(cors())
 app.use(express.json({ limit: "16kb" }))
@@ -14,7 +16,9 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }))
 app.use(express.static("public"))
 
 database()
-app.use("/api/v1/users", Userrouter)
+app.use("/api/v1/users", userRouter)
+app.use("/api/v1/admin", adminRouter)
+app.use("/api/v1/product", productRouter)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

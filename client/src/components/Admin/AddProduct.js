@@ -25,34 +25,23 @@ function AddProduct() {
           <div className='border-2 border-gray-100 rounded-md p-5 flex flex-col'>
             <h1 className='pb-2'>Product Category</h1>
             <select className='border-2 rounded-md border-gray-100 p-2 outline-none'>
-              <option>Man's Shirt</option>
-              <option>Man's T-Shirt</option>
-              <option>Man's Jeans</option>
-              <option>Women T-Shirt</option>
-              <option>Women Skirt</option>
+              <option>Clothing</option>
+              <option>Electronics</option>
+              <option>Kitchen</option>
+              <option>Grocery</option>
+              <option>Beauty</option>
+              <option>Health</option>
             </select>
             <h1 className='pb-2 pt-3'>Material</h1>
-            <select className='border-2 rounded-md border-gray-100 p-2 outline-none'>
-              <option>Cotton</option>
-              <option>Silk</option>
-              <option>Polyester</option>
-              <option>Leather</option>
-              <option>Chiffon</option>
-              <option>Denim</option>
-            </select>
-            <h1 className='pb-2 pt-3'>Fit Types</h1>
-            <select className='border-2 rounded-md border-gray-100 p-2 outline-none'>
-              <option>Classic fit</option>
-              <option>Silm Fit</option>
-              <option>Tapered Fit</option>
-              <option>Athletic Fit</option>
-            </select>
+            <input type="text" placeholder='Enter Product Material' className='p-2 font-normal border-gray-100 border-2 outline-none rounded-md' />
+            <h1 className='pb-2 pt-3'>Styles</h1>
+            <input type="text" placeholder='Enter Product Style' className='p-2 font-normal border-gray-100 border-2 outline-none rounded-md' />
           </div>
         </div>
         <div className='col-span-6 bg-white rounded-xl p-5 mb-10'>
           <h1 className='font-medium text-2xl text-gray-800 pb-4'>Product Image</h1>
           <div className='border-2 border-gray-100 rounded-md p-5 flex flex-col'>
-            <FileUploader handleChange={handleChange} name="file" types={fileTypes} className='h-40'/>
+            <FileUploader handleChange={handleChange} name="file" types={fileTypes} className='h-40' />
           </div>
           <h1 className='font-medium text-2xl text-gray-800 py-4'>Select Size</h1>
           <div className='border-2 border-gray-100 rounded-md p-5 flex flex-col'>
