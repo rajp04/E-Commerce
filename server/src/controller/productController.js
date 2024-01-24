@@ -70,3 +70,16 @@ module.exports.product = async (req, res) => {
         });
     }
 };
+
+
+// Update Product Controller
+module.exports.updateProduct = async (req, res) => {
+    // Get the product ID from the URL parameter
+    const id = req.params.id
+
+    const result = await Product.findByIdAndUpdate({
+        _id: id,
+        ...req.body
+
+    })
+}

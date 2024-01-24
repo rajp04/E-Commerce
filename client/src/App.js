@@ -38,7 +38,6 @@ function App() {
                     <Route path='productlist' element={<ProductList />} />
                     <Route path='orderhistory' element={<OrderHistory />} />
                 </Route>
-
             </Routes>
         </>
     )
