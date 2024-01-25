@@ -40,7 +40,10 @@ function Sidebar() {
                     <MdWorkHistory className='hover:bg-blue-500 rounded-md p-1 text-3xl' /><h1>Order History</h1>
                 </div>
                 <div className='flex items-center space-x-4 text-2xl pb-2 cursor-pointer'>
-                    <RiLogoutBoxFill className='hover:bg-blue-500 rounded-md p-1 text-3xl' /><h1>Logout</h1>
+                    <RiLogoutBoxFill className='hover:bg-blue-500 rounded-md p-1 text-3xl' /><h1 onClick={() => {
+                        sessionStorage.removeItem("admin");
+                        navigate("/")
+                    }} >Logout</h1>
                 </div>
             </div>
         </div>

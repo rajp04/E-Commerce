@@ -13,6 +13,7 @@ import Homes from './components/Admin/Home.js'
 import User from './components/Admin/User.js'
 import Product from './components/Admin/Product.js'
 import AddProduct from './components/Admin/AddProduct.js'
+import EditProduct from './components/Admin/EditProduct.js'
 import OrderHistory from './components/Admin/OrderHistory.js'
 import ProductList from './components/Admin/ProductList.js'
 import AdminLogin from './components/Admin/Login.js'
@@ -35,6 +36,7 @@ function App() {
                     <Route path='user' element={<User />} />
                     <Route path='product' element={<Product />} />
                     <Route path='addproduct' element={<AddProduct />} />
+                    <Route path='editproduct' element={<EditProduct  />} />
                     <Route path='productlist' element={<ProductList />} />
                     <Route path='orderhistory' element={<OrderHistory />} />
                 </Route>

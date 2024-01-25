@@ -13,8 +13,8 @@ function Login() {
     const data = { mobile, password };
     try {
       const response = await axios.post("http://localhost:5555/api/v1/users/login", data);
-      console.log(response)
       if (response) {
+        localStorage.setItem('user', JSON.stringify(response.data.user._id));
         console.log("Login successful");
         navigate("/");
       } else {

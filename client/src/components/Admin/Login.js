@@ -13,12 +13,13 @@ function Login() {
         const data = { email, password };
         try {
             const response = await axios.post("http://localhost:5555/api/v1/admin/login", data);
-            console.log(response)
-            if (response) {
-                console.log("Login successful");
+
+            if (response.data.success === 1) {
+                console.log(response);
+                sessionStorage.setItem('admin', JSON.stringify(response.data.admin._id));
                 navigate("/admin");
             } else {
-                console.error("Login failed: Invalid response data");
+                alert(response.data.message);
             }
         } catch (error) {
             console.error("An error occurred during login:", error.message);

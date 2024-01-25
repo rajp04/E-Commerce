@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Banner from "../image/banner.png";
 import Main from "./Main";
 import Main1 from "./Main1";
@@ -9,6 +9,14 @@ import { useNavigate } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
+
+  const user = localStorage.getItem("user")
+
+  useEffect(()=>{
+    if(!user){
+      navigate("/login")
+      }
+  })
   return (
     <>
       <Header />

@@ -1,16 +1,29 @@
-// nanoid use for unique id
 import { createSlice } from "@reduxjs/toolkit";
 
-
 const initialState = {
-    products: [{ id: 1, text: 'Hello World' }]
+    productData: null,
+    loading: false,
+    error: null,
 }
 
 export const productSlice = createSlice({
     name: 'product',
     initialState,
-    reducers: {}
-})
+    reducers: {
+        getProductData: (state, action) => {
+            state.productData = action.payload;
+            state.loading = false;
+        },
+        getProductDataLoading: (state) => {
+            state.loading = true;
+            state.error = null;
+        },
+        getProductDataFail: (state, action) => {
+            state.error = action.payload;
+            state.loading = false;
+        },
+    },
+});
 
-
-export default productSlice.reducer
+export const { getProductData, getProductDataLoading, getProductDataFail } = productSlice.actions;
+export default productSlice.reducer;

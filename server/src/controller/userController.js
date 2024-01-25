@@ -57,7 +57,7 @@ module.exports.login = async (req, res) => {
     const user = await User.findOne({ mobile, password });
 
     if (user) {
-      res.json({ success: 1, message: "Login successful" });
+      res.json({ success: 1, message: "Login successful", user });
     } else {
       res.status(401).json({ success: 0, message: "Invalid credentials" });
     }

@@ -13,7 +13,7 @@ const productRouter = require("./routes/productRoutes.js")
 app.use(cors())
 app.use(express.json({ limit: "16kb" }))
 app.use(express.urlencoded({ extended: true, limit: "16kb" }))
-app.use(express.static("public"))
+app.use("/public/temp", express.static("public/temp"))
 
 database()
 app.use("/api/v1/users", userRouter)

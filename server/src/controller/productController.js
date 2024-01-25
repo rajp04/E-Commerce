@@ -74,12 +74,68 @@ module.exports.product = async (req, res) => {
 
 // Update Product Controller
 module.exports.updateProduct = async (req, res) => {
-    // Get the product ID from the URL parameter
-    const id = req.params.id
+    const id = req.params.id;
 
-    const result = await Product.findByIdAndUpdate({
-        _id: id,
-        ...req.body
+    const { productName, description, category, material, styles, size, price } = req.body;
 
-    })
-}
+    const image = `http://localhost:5555/public/temp/${req.file.filename}`
+
+    if (!productName || !description || !category || !material || !styles || !size || !price || !image) {
+        return res.status(401).json({ error: 'All fields are required' });
+    }
+
+    try {
+        const updatedProduct = await Product.updateMany(
+            { _id: id },
+            {
+                $set: {
+                    productName,
+                    description,
+                    category,
+                    material,
+                    styles,
+                    size,
+                    price,
+                    image // Assuming req.file.image is the correct property
+                }
+            },
+            { new: true } // This option returns the updated document
+        );
+
+        if (!updatedProduct) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+
+        res.status(200).json({
+            success: 1,
+            message: "Product updated successfully",
+            updatedProduct
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+// Delete Product Controller
+module.exports.deleteProduct = async (req, res) => {
+    try {
+        // Extract user ID from the request parameters
+        const id = req.params.id;
+
+        // Attempt to delete the user with the provided ID
+        const result = await Product.deleteOne({ _id: id });
+
+        // Respond with success message after successful deletion
+        res.json({ success: 1, message: "Product deleted successfully." });
+    } catch (error) {
+        // Log the error for debugging purposes
+        console.error(error);
+
+        // Handle other errors and respond with an appropriate message
+        res.status(500).json({
+            success: 0,
+            message: "Internal Server Error: Error in user deletion process.",
+        });
+    }
+};
