@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Banner from "../image/banner.png";
 import Main from "./Main";
 import Main1 from "./Main1";
@@ -6,17 +6,31 @@ import Service from "./Service";
 import Header from "./Header";
 import Footer from "./Footer";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Home() {
-  const navigate = useNavigate();
+  const id = localStorage.getItem("id")
+  const navigate = useNavigate()
+  const [userData, setUserData] = useState()
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5555/api/v1/users/userdata/${id}`);
 
-  const user = localStorage.getItem("user")
-
-  useEffect(()=>{
-    if(!user){
-      navigate("/login")
+        if (response.data) {
+          setUserData(response.data);
+        } else {
+          console.log("Invalid data");
+        }
+      } catch (error) {
+        console.error(error);
       }
-  })
+    };
+    fetchData();
+  }, [id]);
+
+  console.log(userData);
+
   return (
     <>
       <Header />
@@ -56,26 +70,49 @@ function Home() {
             </button>
           </div>
           <div className="xl:col-span-2 lg:col-span-3 md:col-span-3 col-span-6">
-            <div className="bg-blue-100 p-2 flex flex-col rounded-md mb-2">
-              <div className="flex mb-2">
-                <img
-                  src={require("../image/avatar=pic1@2x.png")}
-                  alt=""
-                  className="h-14 pe-2"
-                />
-                <div>
-                  <h1>Hi, User</h1>
-                  <h1>let's get stated</h1>
-                </div>
+            {id ? (
+              < div className="bg-blue-100 p-2 flex flex-col rounded-md mb-2">
+                {Array.isArray(userData) && userData.map(data => (
+                  <div className="flex mb-2" key={data.id}>
+                    <img
+                      src={data.avatar}
+                      alt=""
+                      className="h-14 w-14 rounded-full"
+                    />
+                    <div className="ps-2">
+                      <h1 className="font-semibold text-2xl">Hi, {data.fullName}</h1>
+                      <h1>Let's get started</h1>
+                    </div>
+                  </div>
+                ))}
+                <button
+                  className="bg-white text-blue-500 text-lg py-1 rounded-md"
+                  onClick={() => { localStorage.removeItem("id"); window.location.reload(); }}
+                >
+                  Logout
+                </button>
               </div>
-              {/* <button className='bg-blue-500 rounded-md text-white py-1 text-lg mb-2'>Join now</button> */}
-              <button
-                className="bg-white text-blue-500 text-lg py-1 rounded-md"
-                onClick={() => navigate("/login")}
-              >
-                Log in
-              </button>
-            </div>
+            ) : (
+              <div className="bg-blue-100 p-2 flex flex-col rounded-md mb-2">
+                <div className="flex mb-2">
+                  <img
+                    src={require("../image/avatar=pic1@2x.png")}
+                    alt=""
+                    className="h-14 pe-2"
+                  />
+                  <div>
+                    <h1>Hi, User</h1>
+                    <h1>Let's get started</h1>
+                  </div>
+                </div>
+                <button
+                  className="bg-white text-blue-500 text-lg py-1 rounded-md"
+                  onClick={() => navigate("/login")}
+                >
+                  Log in
+                </button>
+              </div>
+            )}
             <div className="bg-orange-400 rounded-md mb-2 p-5 text-white">
               <h1>Get US $10 off with a new supplier</h1>
             </div>
@@ -163,7 +200,7 @@ function Home() {
         <Main />
         <Main1 />
         <Service />
-      </div>
+      </div >
       <Footer />
     </>
   );

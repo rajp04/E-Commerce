@@ -22,7 +22,7 @@ function Login() {
                 alert(response.data.message);
             }
         } catch (error) {
-            console.error("An error occurred during login:", error.message);
+            alert("An error occurred during login:", error.message);
         }
     };
 

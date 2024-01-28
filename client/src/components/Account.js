@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import images from "../image/images.jpg";
 import { useNavigate } from 'react-router-dom';
 import avatar from '../image/avatar.jpg'
@@ -10,8 +10,16 @@ function Account() {
 
     const [data, setData] = useState()
     const hiddenFileInput = useRef();
-
     const navigate = useNavigate()
+
+    const user = localStorage.getItem("id")
+
+    useEffect(() => {
+        if (!user) {
+            navigate("/login")
+        }
+    },)
+
 
     const handleClick = () => {
         hiddenFileInput.current.click();
@@ -51,12 +59,15 @@ function Account() {
                 <hr className='h-px my-1 bg-gray-200 border-0 dark:bg-gray-700' />
                 <div className='flex items-center space-x-2 pt-1'>
                     <IoMdLock className='text-2xl' />
-                    <h1 className='font-medium text-2xl'>Change Password</h1>
+                    <h1 className='font-medium text-2xl cursor-pointer' onClick={() => navigate("/changepassword")}>Change Password</h1>
                 </div>
                 <hr className='h-px my-1 bg-gray-200 border-0 dark:bg-gray-700' />
                 <div className='flex items-center space-x-2 pt-1'>
                     <IoLogOut className='text-2xl' />
-                    <h1 className='font-medium text-2xl'>Logout</h1>
+                    <h1 className='font-medium text-2xl cursor-pointer' onClick={() => {
+                        localStorage.removeItem("id");
+                        navigate("/login")
+                    }}>Logout</h1>
                 </div>
                 <hr className='h-px my-1 bg-gray-200 border-0 dark:bg-gray-700' />
             </div>

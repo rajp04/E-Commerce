@@ -14,14 +14,14 @@ function Login() {
     try {
       const response = await axios.post("http://localhost:5555/api/v1/users/login", data);
       if (response) {
-        localStorage.setItem('user', JSON.stringify(response.data.user._id));
+        localStorage.setItem('id', response.data.user._id);
         console.log("Login successful");
         navigate("/");
       } else {
-        console.error("Login failed: Invalid response data");
+        alert("Login failed: Invalid response data");
       }
     } catch (error) {
-      console.error("An error occurred during login:", error.message);
+      alert("An error occurred during login:", error.message);
     }
   };
 

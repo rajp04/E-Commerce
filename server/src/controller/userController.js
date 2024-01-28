@@ -130,6 +130,7 @@ module.exports.updatePassword = async (req, res) => {
   }
 };
 
+
 // Delete User Controller
 module.exports.deleteUser = async (req, res) => {
   try {

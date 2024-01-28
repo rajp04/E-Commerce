@@ -7,6 +7,8 @@ import Navbar from './Navbar';
 function Header() {
     const navigate = useNavigate()
 
+    const user = localStorage.getItem("id")
+
     return (
         <>
             <div className='flex justify-between items-center h-16 xl:px-28 lg:px-16 md:px-6 px-2'>
@@ -23,22 +25,37 @@ function Header() {
                     <h1 className='border-y-2 border-e-2 border-blue-500 border bg-blue-500 rounded-e-md py-1 md:px-5 px-1 text-white'>Search</h1>
                 </div>
                 <div className='flex items-center justify-center text-gray-500 lg:space-x-4 space-x-1'>
-                    <div className='flex-col flex items-center justify-center max-[250px]:hidden cursor-pointer' onClick={() => navigate('/account')}>
-                        <FaUserLarge className='md:text-xl' />
-                        <h1 className='text-sm'  >Account</h1>
-                    </div>
-                    <div className='flex-col flex items-center justify-center max-[350px]:hidden'>
-                        <BiSolidMessageDetail className='md:text-xl' />
-                        <h1 className='text-sm'>Message</h1>
-                    </div>
-                    <div className='flex-col flex items-center justify-center max-[300px]:hidden'>
-                        <FaHeart className='md:text-xl' />
-                        <h1 className='text-sm'>Orders</h1>
-                    </div>
-                    <div className='flex-col flex items-center justify-center cursor-pointer' onClick={() => navigate('/cart')}>
-                        <FaCartShopping className='md:text-xl' />
-                        <h1 className='text-sm whitespace-nowrap'>My Cart</h1>
-                    </div>
+                    {user ? (
+                        <>
+                            <div className='flex-col flex items-center justify-center max-[250px]:hidden cursor-pointer' onClick={() => navigate('/account')}>
+                                <FaUserLarge className='md:text-xl' />
+                                <h1 className='text-sm'  >Account</h1>
+                            </div>
+                            <div className='flex-col flex items-center justify-center max-[350px]:hidden'>
+                                <BiSolidMessageDetail className='md:text-xl' />
+                                <h1 className='text-sm'>Message</h1>
+                            </div>
+                            <div className='flex-col flex items-center justify-center max-[300px]:hidden'>
+                                <FaHeart className='md:text-xl' />
+                                <h1 className='text-sm'>Orders</h1>
+                            </div>
+                            <div className='flex-col flex items-center justify-center cursor-pointer' onClick={() => navigate('/cart')}>
+                                <FaCartShopping className='md:text-xl' />
+                                <h1 className='text-sm whitespace-nowrap'>My Cart</h1>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className='flex-col flex items-center justify-center max-[350px]:hidden'>
+                                <BiSolidMessageDetail className='md:text-xl' />
+                                <h1 className='text-sm'>Message</h1>
+                            </div>
+                            <div className='flex-col flex items-center justify-center max-[300px]:hidden'>
+                                <FaHeart className='md:text-xl' />
+                                <h1 className='text-sm'>Orders</h1>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
             <div className='sm:hidden flex items-center justify-center mx-2 mb-2'>
