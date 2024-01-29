@@ -72,7 +72,7 @@ function Home() {
           <div className="xl:col-span-2 lg:col-span-3 md:col-span-3 col-span-6">
             {id ? (
               < div className="bg-blue-100 p-2 flex flex-col rounded-md mb-2">
-                {Array.isArray(userData) && userData.map(data => (
+                {/* {userData && userData?.map(data => (
                   <div className="flex mb-2" key={data.id}>
                     <img
                       src={data.avatar}
@@ -84,7 +84,7 @@ function Home() {
                       <h1>Let's get started</h1>
                     </div>
                   </div>
-                ))}
+                ))} */}
                 <button
                   className="bg-white text-blue-500 text-lg py-1 rounded-md"
                   onClick={() => { localStorage.removeItem("id"); window.location.reload(); }}

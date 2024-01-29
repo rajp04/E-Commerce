@@ -19,6 +19,7 @@ import ProductList from './components/Admin/ProductList.js'
 import AdminLogin from './components/Admin/Login.js'
 import ChangePassword from './components/ChangePassword.js'
 import Message from './components/Message.js'
+import Order from './components/Order.js'
 
 function App() {
     return (
@@ -33,6 +34,7 @@ function App() {
                 <Route path='/account' element={<Account />} />
                 <Route path='/profile' element={<Profile />} />
                 <Route path='/message' element={<Message />} />
+                <Route path='/order' element={<Order />} />
                 <Route path='/changepassword' element={<ChangePassword />} />
                 <Route path='/admin/login' element={<AdminLogin />} />
                 <Route path='/admin/' element={<Dashboard />} >

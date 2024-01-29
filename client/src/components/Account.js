@@ -20,7 +20,6 @@ function Account() {
         }
     },)
 
-
     const handleClick = () => {
         hiddenFileInput.current.click();
     };

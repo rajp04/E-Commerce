@@ -31,11 +31,11 @@ function Header() {
                                 <FaUserLarge className='md:text-xl' />
                                 <h1 className='text-sm'  >Account</h1>
                             </div>
-                            <div className='flex-col flex items-center justify-center max-[350px]:hidden cursor-pointer' onClick={()=> navigate("/message")}>
+                            <div className='flex-col flex items-center justify-center max-[350px]:hidden cursor-pointer' onClick={() => navigate("/message")}>
                                 <BiSolidMessageDetail className='md:text-xl' />
                                 <h1 className='text-sm '>Message</h1>
                             </div>
-                            <div className='flex-col flex items-center justify-center max-[300px]:hidden'>
+                            <div className='flex-col flex items-center justify-center max-[300px]:hidden cursor-pointer' onClick={() => navigate('/order')}>
                                 <FaHeart className='md:text-xl' />
                                 <h1 className='text-sm'>Orders</h1>
                             </div>
@@ -46,13 +46,9 @@ function Header() {
                         </>
                     ) : (
                         <>
-                            <div className='flex-col flex items-center justify-center max-[350px]:hidden cursor-pointer' onClick={()=> navigate("/message")}>
+                            <div className='flex-col flex items-center justify-center max-[350px]:hidden cursor-pointer' onClick={() => navigate("/message")}>
                                 <BiSolidMessageDetail className='md:text-xl' />
                                 <h1 className='text-sm'>Message</h1>
-                            </div>
-                            <div className='flex-col flex items-center justify-center max-[300px]:hidden'>
-                                <FaHeart className='md:text-xl' />
-                                <h1 className='text-sm'>Orders</h1>
                             </div>
                         </>
                     )}
