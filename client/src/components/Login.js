@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import image from "../image/images.jpg";
 import axios from "axios";
@@ -7,6 +7,12 @@ function Login() {
   const navigate = useNavigate();
   const [mobile, setMobile] = useState()
   const [password, setPassword] = useState()
+
+  const user = localStorage.getItem("id")
+
+  useEffect(() => {
+    if (user) navigate("/");
+  })
 
   const login = async (e) => {
     e.preventDefault();

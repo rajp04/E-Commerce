@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function Profile() {
+    const [data, setData] = useState()
     const navigate = useNavigate()
     const [fullName, setFullName] = useState()
     const [email, setEmail] = useState()
@@ -34,6 +35,17 @@ function Profile() {
         }
     };
 
+    useEffect(() => {
+        const getUserData = async () => {
+            await axios.get(`http://localhost:5555/api/v1/users/userdata/${id}`)
+                .then(response => {
+                    setData(response.data);
+                })
+        }
+        getUserData()
+    },[id])
+
+    console.log(data);
     return (
         <div className="flex flex-col px-4 items-center  py-10 bg-cover bg-fixed bg-no-repeat"
             style={{ backgroundImage: `url(${image})`, height: "100vh" }}
@@ -54,8 +66,8 @@ function Profile() {
                 </div>
                 <hr className='h-px my-1 bg-gray-200 border-0 dark:bg-gray-700' />
                 <div className='flex items-center'>
-                    <h1 className='text-xl font-semibold'>Mobile Number: </h1>
-                    <input type="text" className='ps-2 text-xl font-medium outline-none' value={mobile} onChange={(e) => setMobile(e.target.value)} />
+                    <h1 className='text-xl font-semibold whitespace-nowrap'>Mobile Number: </h1>
+                    <input type="text" className='ps-2 text-xl font-medium outline-none w-60 bg-transparent' value={mobile} onChange={(e) => setMobile(e.target.value)} />
                 </div>
                 <hr className='h-px my-1 bg-gray-200 border-0 dark:bg-gray-700' />
                 <div className='flex justify-center'>

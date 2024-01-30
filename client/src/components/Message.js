@@ -1,12 +1,20 @@
 import React from 'react'
-import { IoSend } from "react-icons/io5";
+import { IoSend, IoSearchSharp } from "react-icons/io5";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 function Message() {
     return (
         <div className='flex h-screen justify-center bg-gray-100'>
             <div className='bg-white w-9/12 border-x-2'>
-                <div className='py-4'>
-                    Name
+                <div className='py-1 flex items-center justify-between px-5 bg-gray-200 shadow'>
+                    <div>
+                        <h1 className='font-semibold text-xl'>E-Commerce</h1>
+                        <h1 className='text-green-500'>online</h1>
+                    </div>
+                    <div className='flex space-x-5 text-2xl font-bold'>
+                        <IoSearchSharp />
+                        <BsThreeDotsVertical />
+                    </div>
                 </div>
                 <div className='overflow-y-scroll h-5/6 relative pt-2'>
                     <div className='flex flex-col '>

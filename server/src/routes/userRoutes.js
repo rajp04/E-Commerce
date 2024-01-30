@@ -10,6 +10,7 @@ router.route("/updatepassword/:id").patch(userController.updatePassword);
 router.route("/deleteuser/:id").delete(userController.deleteUser);
 router.route("/alluserdata").get(userController.usersData);
 router.route("/userdata/:id").get(userController.userByID);
-router.route("/avatar/:id").post(upload.upload.single('avatar'), userController.avatar);
+router.route("/avatar/:id").patch(upload.upload.single('avatar'), userController.avatar);
+router.route("/userblock/:id").patch(userController.userBlock);
 
 module.exports = router;

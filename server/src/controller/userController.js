@@ -101,26 +101,41 @@ module.exports.updateUser = async (req, res) => {
 // Update Password Controller
 module.exports.updatePassword = async (req, res) => {
   try {
+    const { password, newPassword } = req.body;
     // Extract user ID from the request parameters
     const userId = req.params.id;
 
-    // Find and update the user's password in the database
-    const updatePassword = await User.findByIdAndUpdate(userId, {
-      password: req.body.password,
-    });
-
-    // Check if the user with the provided ID was not found
-    if (!updatePassword) {
-      // Respond with a 404 Not Found status and a message
-      return res.status(404).json({ success: 0, message: "User not found for password update" });
+    if (!password || !newPassword) {
+      return res.json({
+        success: 0,
+        message: "Please provide current password and new passwords.",
+      });
     }
 
-    // Respond with success message and the updated password details
-    res.json({
-      success: 1,
-      message: "Password updated successfully",
-      updatePassword
-    });
+    // Correct the variable name from 'id' to 'userId'
+    const user = await User.findOne({ _id: userId });
+    if (!user) {
+      return res.json({
+        success: 0,
+        message: "User not found.",
+      });
+    }
+
+    if (password === newPassword) {
+      return res.json({
+        success: 0,
+        message: "Please enter a new password you have not used before.",
+      });
+    } else {
+      // Update the password in the database
+      user.password = newPassword;
+      await user.save();
+
+      return res.json({
+        success: 1,
+        message: "Password updated successfully.",
+      });
+    }
   } catch (error) {
     // Log the error for debugging purposes
     console.error(error);
@@ -226,5 +241,43 @@ module.exports.avatar = async (req, res) => {
     // Handle any errors that occur during the update process
     console.error(error);
     res.status(500).json({ success: 0, message: "Internal Server Error" });
+  }
+};
+
+
+//User Blocked by admin
+exports.userBlock = async (req, res) => {
+  const id = req.params.id;
+  try {
+    // Find the user by ID
+    const users = await User.findById({ _id: id });
+
+    // Check if the user exists
+    if (users) {
+      if (users.block == true) {
+        // If user is currently blocked, unblock them
+        await User.updateOne(
+          { _id: id },
+          { $set: { block: false } }
+        );
+        return res.json({
+          message: "User Blocked.",
+        });
+      } else {
+        // If user is currently unblocked, block them
+        await User.updateOne(
+          { _id: id },
+          { $set: { block: true } }
+        );
+        return res.json({
+          message: "User Unblocked.",
+        });
+      }
+    }
+  } catch (err) {
+    return res.json({
+      success: 0,
+      message: "Error in code.",
+    });
   }
 };

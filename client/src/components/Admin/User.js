@@ -40,6 +40,20 @@ function User() {
 
   console.log(userData);
 
+  const handleBlock = async (id) => {
+    try {
+      const response = await axios.patch(`http://localhost:5555/api/v1/users/userblock/${id}`)
+      if (response.status == 200) {
+        console.log('Product Block successfully');
+        window.location.reload();
+      } else {
+        console.error('Failed to delete product. Server responded with:', response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div>
       <div className="flex flex-col pt-20">
@@ -47,7 +61,7 @@ function User() {
           <h1 className='w-72 ps-2'>Id</h1>
           <h1 className='w-72 ps-5'>Name</h1>
           <h1 className='w-80 ps-5'>Email</h1>
-          <h1 className='ps-5 w-48'>Phone Number</h1>
+          <h1 className='w-48 ps-5'>Phone Number</h1>
           <h1 className='w-28 ps-5'>Block</h1>
           <h1 className=''>Delete</h1>
         </div>
@@ -57,8 +71,13 @@ function User() {
             <h1 className='w-72 ps-2 overflow-x-hidden'>{user._id}</h1>
             <h1 className='w-72 ps-5 overflow-x-hidden'>{user.fullName}</h1>
             <h1 className='w-80 overflow-x-hidden ps-5'>{user.email}</h1>
-            <h1 className='ps-5 w overflow-x-hidden w-48'>{user.mobile}</h1>
-            <h1 className='w-28 ps-5'>{user.block}</h1>
+            <h1 className='w-48 ps-5 overflow-x-hidden '>{user.mobile}</h1>
+            {user.block == true ? (
+              <button className='py-1 px-2 ms-5 text-white me-3 bg-green-500 rounded-md' onClick={() => handleBlock(user._id)}>unblock</button>
+            ) : (
+              <button className='py-1 px-4 ms-5 text-white me-3 bg-red-500 rounded-md' onClick={() => handleBlock(user._id)}>Block</button>
+            )}
+
             <MdDelete className='text-3xl ms-5 cursor-pointer' onClick={() => handleDelete(user._id)} />
           </div>
         ))}

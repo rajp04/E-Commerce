@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 function AddProduct() {
-
+  const location = useLocation()
+  console.log(location);
   // State for form fields
-  const [productName, setProductName] = useState('');
+  const [productName, setProductName] = useState(location.state.result[0].productName);
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('Clothing');
   const [material, setMaterial] = useState('');

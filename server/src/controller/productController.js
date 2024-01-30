@@ -117,6 +117,7 @@ module.exports.updateProduct = async (req, res) => {
     }
 };
 
+
 // Delete Product Controller
 module.exports.deleteProduct = async (req, res) => {
     try {
