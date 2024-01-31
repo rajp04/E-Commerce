@@ -174,7 +174,7 @@ module.exports.deleteUser = async (req, res) => {
 module.exports.usersData = async (req, res) => {
   try {
     // Fetch all users from the database
-    const usersData = await User.find();
+    const usersData = await User.find().select('-password');
 
     // Respond with the retrieved users' data
     res.json(usersData);
@@ -195,7 +195,7 @@ module.exports.userByID = async (req, res) => {
     const id = req.params.id;
 
     // Find user details in the database based on the user ID
-    const result = await User.findById({ _id: id });
+    const result = await User.findById({ _id: id }).select('-password');
 
     // Respond with success message and the user details
     res.json({

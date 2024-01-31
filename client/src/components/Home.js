@@ -18,7 +18,7 @@ function Home() {
         const response = await axios.get(`http://localhost:5555/api/v1/users/userdata/${id}`);
 
         if (response.data) {
-          setUserData(response.data);
+          setUserData(response.data.data);
         } else {
           console.log("Invalid data");
         }
@@ -72,19 +72,19 @@ function Home() {
           <div className="xl:col-span-2 lg:col-span-3 md:col-span-3 col-span-6">
             {id ? (
               < div className="bg-blue-100 p-2 flex flex-col rounded-md mb-2">
-                {/* {userData && userData?.map(data => (
-                  <div className="flex mb-2" key={data.id}>
+                {userData &&
+                  <div className="flex mb-2">
                     <img
-                      src={data.avatar}
+                      src={userData.avatar}
                       alt=""
                       className="h-14 w-14 rounded-full"
                     />
                     <div className="ps-2">
-                      <h1 className="font-semibold text-2xl">Hi, {data.fullName}</h1>
+                      <h1 className="font-semibold text-2xl">Hi, {userData.fullName}</h1>
                       <h1>Let's get started</h1>
                     </div>
                   </div>
-                ))} */}
+                }
                 <button
                   className="bg-white text-blue-500 text-lg py-1 rounded-md"
                   onClick={() => { localStorage.removeItem("id"); window.location.reload(); }}

@@ -54,7 +54,7 @@ function Login() {
             Mobile number
           </label>
           <input
-            type="text"
+            type="number"
             name="mobile"
             value={mobile}
             onChange={(e) => setMobile(e.target.value)}

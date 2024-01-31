@@ -65,20 +65,19 @@ function Account() {
         >
             <div className="flex flex-col justify-center rounded-md pt-10 pb-5 px-5 bg-white w-1/3">
                 <div className='flex justify-center items-center flex-col'>
-                    {Array.isArray(data) ? (
-                        data.map(item => (
-                            <>
-                                <img
-                                    src={item.avatar}
-                                    alt="Preview"
-                                    onClick={() => hiddenFileInput.current.click()}
-                                    style={{ cursor: 'pointer' }}
-                                    className='w-24 h-24 rounded-full'
-                                />
-                                <h1 className='font-semibold text-2xl'>{item.fullName}</h1>
-                            </>
-                        ))
-                    ) : (
+                    {data.avatar ?
+                        <>
+                            <img
+                                src={data.avatar}
+                                alt="Preview"
+                                onClick={() => hiddenFileInput.current.click()}
+                                style={{ cursor: 'pointer' }}
+                                className='w-24 h-24 rounded-full'
+                            />
+                            <h1 className='font-semibold text-2xl'>{data.fullName}</h1>
+                        </>
+
+                        :
                         <>
                             <img
                                 src={Avatar}
@@ -89,7 +88,7 @@ function Account() {
                             />
                             <h1 className='font-semibold text-2xl'>User Name</h1>
                         </>
-                    )}
+                    }
 
                     <input type="file" onChange={(e) => setAvatar(e.target.files[0])} ref={hiddenFileInput} style={{ display: 'none' }} />
                 </div>

@@ -5,7 +5,7 @@ const upload = require("../middlewares/multer.js");
 
 router.route("/addproduct").post(upload.upload.single("image"), productController.addProduct);
 router.route("/product").get(productController.product);
-router.route("/updateproduct/:id").post(upload.upload.single("image"), productController.updateProduct);
+router.route("/updateproduct/:id").patch(upload.upload.single("image"), productController.updateProduct);
 router.route("/deleteproduct/:id").delete(productController.deleteProduct);
 
 module.exports = router;

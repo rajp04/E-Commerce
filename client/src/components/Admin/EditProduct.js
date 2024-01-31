@@ -4,17 +4,19 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 
 function AddProduct() {
-  const location = useLocation()
-  console.log(location);
+  const { state } = useLocation()
+  console.log(state);
   // State for form fields
-  const [productName, setProductName] = useState(location.state.result[0].productName);
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('Clothing');
-  const [material, setMaterial] = useState('');
-  const [styles, setStyles] = useState('');
-  const [size, setSize] = useState('S');
-  const [price, setPrice] = useState('');
+  const [productName, setProductName] = useState(state?.productName);
+  const [description, setDescription] = useState(state?.description);
+  const [category, setCategory] = useState(state?.category);
+  const [material, setMaterial] = useState(state?.material);
+  const [styles, setStyles] = useState(state?.styles);
+  const [size, setSize] = useState(state?.size);
+  const [price, setPrice] = useState(state?.price);
   const [image, setImage] = useState(null);
+
+  const id = state?._id
 
   // Function to handle file upload
   const handleChange = (image) => {
@@ -22,7 +24,7 @@ function AddProduct() {
   };
 
   // Function to handle form submission
-  const handleSubmit = async (e, id) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -39,7 +41,7 @@ function AddProduct() {
       data.append("image", image);
 
       // Making POST request using axios
-      const response = await axios.post(`http://localhost:5555/api/v1/product/updateproduct/${id}`, data);
+      const response = await axios.patch(`http://localhost:5555/api/v1/product/updateproduct/${id}`, data);
 
       if (response.data.success === 1) {
         console.log("Product added successfully");

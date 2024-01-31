@@ -80,7 +80,7 @@ module.exports.updateProduct = async (req, res) => {
 
     const image = `http://localhost:5555/public/temp/${req.file.filename}`
 
-    if (!productName || !description || !category || !material || !styles || !size || !price || !image) {
+    if (!productName || !description || !category || !material || !styles || !size || !price) {
         return res.status(401).json({ error: 'All fields are required' });
     }
 

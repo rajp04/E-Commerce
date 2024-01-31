@@ -40,10 +40,6 @@ function ProductList() {
     return <div>Error: {error}</div>;
   }
 
-  const handleEdit = () => {
-    navigate('/admin/editproduct', { state: productData })
-  }
-
   return (
     <div className='pt-20 px-5 bg-gray-100'>
       <h1 className='my-8 text-4xl font-bold'>Add Product</h1>
@@ -71,7 +67,7 @@ function ProductList() {
             In Stock
           </div>
           <div className='col-span-2 flex justify-center items-center space-x-2'>
-            <button className='bg-blue-600 text-white rounded-md px-4 py-2' onClick={handleEdit} > Edit </button>
+            <button className='bg-blue-600 text-white rounded-md px-4 py-2' onClick={() => navigate('/admin/editproduct', { state: product })} > Edit </button>
             <button className='bg-red-500 text-white rounded-md px-4 py-2' onClick={() => handleDelete(product._id)}>Delete</button>
           </div>
         </div>

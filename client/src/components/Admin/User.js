@@ -1,5 +1,5 @@
 /* eslint-disable eqeqeq */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserData } from '../../thunks/UserThunk.js';
 import { MdDelete } from 'react-icons/md';
@@ -11,9 +11,10 @@ function User() {
   const loading = useSelector((state) => state.user.loading);
   const error = useSelector((state) => state.user.error);
 
+  const [refresh, setRefresh] = useState()
   useEffect(() => {
     dispatch(UserData());
-  }, [dispatch]);
+  }, [dispatch, refresh]);
 
   const handleDelete = async (id) => {
     try {
@@ -21,7 +22,7 @@ function User() {
 
       if (response.status == 200) {
         console.log('Product deleted successfully');
-        window.location.reload();
+        setRefresh(Math.random())
       } else {
         console.error('Failed to delete product. Server responded with:', response.data);
       }
@@ -45,7 +46,7 @@ function User() {
       const response = await axios.patch(`http://localhost:5555/api/v1/users/userblock/${id}`)
       if (response.status == 200) {
         console.log('Product Block successfully');
-        window.location.reload();
+        setRefresh(Math.random())
       } else {
         console.error('Failed to delete product. Server responded with:', response.data);
       }
