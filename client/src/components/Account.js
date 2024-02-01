@@ -12,7 +12,6 @@ function Account() {
 
     const [data, setData] = useState([])
     const [avatar, setAvatar] = useState()
-    const [refresh, setRefresh] = useState()
     const hiddenFileInput = useRef();
     const navigate = useNavigate()
 
@@ -31,7 +30,7 @@ function Account() {
 
             const result = await axios.patch(`http://localhost:5555/api/v1/users/avatar/${id}`, fData);
             if (result.status === 200) {
-                setRefresh(Math.random())
+                window.location.reload()
                 console.log("Avatar Change Successfully");
             } else {
                 alert('Fail to change Avatar');
@@ -59,7 +58,7 @@ function Account() {
         getUserInfo();
     }, [id]);
 
-    console.log(data);
+    // console.log(data);
 
     return (
         <div className="flex flex-col px-4 items-center  py-10 bg-cover bg-fixed bg-no-repeat"

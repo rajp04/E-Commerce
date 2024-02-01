@@ -1,3 +1,4 @@
+const { compare } = require("bcrypt");
 const userSchema = require("../models/userModels.js");
 const User = userSchema.User;
 
@@ -54,12 +55,30 @@ module.exports.login = async (req, res) => {
   try {
     const { mobile, password } = req.body;
 
+    if (!mobile || !password) {
+      return res.json({
+        success: 0,
+        message: "Please Enter the Mobile Number and Password"
+      });
+    }
+
     const user = await User.findOne({ mobile, password });
 
     if (user) {
-      res.json({ success: 1, message: "Login successful", user });
+      if (user.block == 0) {
+        return res.json({
+          success: 0,
+          message: "Something went wrong.",
+        });
+      } else {
+        return res.json({
+          success: 1,
+          message: "Login Successfully.",
+          user
+        });
+      }
     } else {
-      res.status(401).json({ success: 0, message: "Invalid credentials" });
+      return res.json({ success: 0, message: "Invalid credentials" });
     }
   } catch (error) {
     // Log the error message for debugging

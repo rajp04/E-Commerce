@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema(
         },
         avatar: {
             type: String,
-            default: null,
+            default: 'https://res.cloudinary.com/dtdlad1ud/image/upload/v1703938887/y18sqhaus4snghlhcscm.jpg',
         },
         otp: {
             type: Number,

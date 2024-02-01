@@ -27,7 +27,7 @@ function Login() {
         alert("Login failed: Invalid response data");
       }
     } catch (error) {
-      alert("An error occurred during login:", error.message);
+      console.log("An error occurred during login:", error.message);
     }
   };
 
