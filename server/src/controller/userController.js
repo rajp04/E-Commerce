@@ -62,8 +62,7 @@ module.exports.login = async (req, res) => {
       });
     }
 
-    const user = await User.findOne({ mobile, password });
-
+    const user = await User.findOne({ mobile });
     if (user) {
       if (user.block == 0) {
         return res.json({
@@ -76,7 +75,7 @@ module.exports.login = async (req, res) => {
           message: "Login Successfully.",
           user
         });
-      }
+      } 
     } else {
       return res.json({ success: 0, message: "Invalid credentials" });
     }

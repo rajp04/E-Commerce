@@ -41,8 +41,8 @@ function ProductList() {
   }
 
   return (
-    <div className='pt-20 px-5 bg-gray-100'>
-      <h1 className='my-8 text-4xl font-bold'>Add Product</h1>
+    <div className='pt-20 px-5 bg-gray-100 pb-10'>
+      <h1 className='my-8 text-4xl font-bold'>Product List</h1>
       <div className='grid grid-cols-10 border-2 bg-gray-200 rounded-t-md py-1'>
         <h1 className='col-span-2 text-xl font-medium text-center'>Image</h1>
         <h1 className='col-span-2 text-xl font-medium text-center'>Details</h1>
@@ -52,12 +52,12 @@ function ProductList() {
       </div>
       {productData && productData.result.map(product => (
         <div key={product._id} className='grid grid-cols-10 border-2 bg-white rounded-b-md py-1'>
-          <div className='col-span-2 flex justify-center'>
+          <div className='col-span-2 flex justify-center items-center'>
             <img src={product.image} alt="" className='h-20 rounded-xl' />
           </div>
           <div className='col-span-2 flex flex-col items-center justify-center'>
-            <h1 className='font-medium text-xl'>{product.productName}</h1>
-            <p>{product.description}</p>
+            <h1 className='font-medium text-xl '>{product.productName}</h1>
+            <p className='h-12 overflow-hidden'>{product.description}</p>
           </div>
           <div className='flex items-center col-span-2 justify-center'>
             <FaIndianRupeeSign />
