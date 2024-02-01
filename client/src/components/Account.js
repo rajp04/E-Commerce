@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react'
 import images from "../image/images.jpg";
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +12,7 @@ function Account() {
 
     const [data, setData] = useState([])
     const [avatar, setAvatar] = useState()
+    const [refresh, setRefresh] = useState()
     const hiddenFileInput = useRef();
     const navigate = useNavigate()
 
@@ -29,7 +31,7 @@ function Account() {
 
             const result = await axios.patch(`http://localhost:5555/api/v1/users/avatar/${id}`, fData);
             if (result.status === 200) {
-                window.location.reload()
+                setRefresh(Math.random())
                 console.log("Avatar Change Successfully");
             } else {
                 alert('Fail to change Avatar');
@@ -76,7 +78,6 @@ function Account() {
                             />
                             <h1 className='font-semibold text-2xl'>{data.fullName}</h1>
                         </>
-
                         :
                         <>
                             <img

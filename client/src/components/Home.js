@@ -13,23 +13,25 @@ function Home() {
   const navigate = useNavigate()
   const [userData, setUserData] = useState()
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5555/api/v1/users/userdata/${id}`);
+    if (id) {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(`http://localhost:5555/api/v1/users/userdata/${id}`);
 
-        if (response.data) {
-          setUserData(response.data.data);
-        } else {
-          console.log("Invalid data");
+          if (response.data) {
+            setUserData(response.data.data);
+          } else {
+            console.log("Invalid data");
+          }
+        } catch (error) {
+          console.error(error);
         }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
+      };
+      fetchData();
+    }
   }, [id]);
 
-  console.log(userData);
+  // console.log(userData);
 
   return (
     <>
