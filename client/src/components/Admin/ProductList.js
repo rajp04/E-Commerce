@@ -57,7 +57,7 @@ function ProductList() {
           </div>
           <div className='col-span-2 flex flex-col items-center justify-center'>
             <h1 className='font-medium text-xl '>{product.productName}</h1>
-            <p className='h-12 overflow-hidden'>{product.description}</p>
+            <p className='overflow-hidden w-64 whitespace-nowrap text-ellipsis'>{product.description}</p>
           </div>
           <div className='flex items-center col-span-2 justify-center'>
             <FaIndianRupeeSign />

@@ -41,7 +41,7 @@ function Product() {
             <img src={product.image} alt="" className='rounded-t-md p-3 h-64 w-full bg-white' />
             <div className='p-5 bg-white rounded-b-md'>
               <h1 className='font-bold text-2xl pb-1'>{product.productName}</h1>
-              <h1 className='text-gray-500 pb-1 h-12 overflow-hidden'>{product.description}</h1>
+              <h1 className='text-gray-500 pb-1 overflow-hidden w-64 whitespace-nowrap text-ellipsis'>{product.description}</h1>
               <div className='flex items-center text-blue-500'>
                 <FaIndianRupeeSign />
                 <h1 className='text-xl'>{product.price}</h1>

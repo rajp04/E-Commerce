@@ -78,29 +78,51 @@ module.exports.updateProduct = async (req, res) => {
 
     const { productName, description, category, material, styles, size, price } = req.body;
 
-    const image = `http://localhost:5555/public/temp/${req.file.filename}`
+    const file = req.file?.filename
 
     if (!productName || !description || !category || !material || !styles || !size || !price) {
         return res.status(401).json({ error: 'All fields are required' });
     }
 
     try {
-        const updatedProduct = await Product.updateMany(
-            { _id: id },
-            {
-                $set: {
-                    productName,
-                    description,
-                    category,
-                    material,
-                    styles,
-                    size,
-                    price,
-                    image // Assuming req.file.image is the correct property
-                }
-            },
-            { new: true } // This option returns the updated document
-        );
+        let updatedProduct;
+        if (file != undefined) {
+            const image = `http://localhost:5555/public/temp/${file}`
+            updatedProduct = await Product.updateMany(
+                { _id: id },
+                {
+                    $set: {
+                        productName,
+                        description,
+                        category,
+                        material,
+                        styles,
+                        size,
+                        price,
+                        image // Assuming req.file.image is the correct property
+                    }
+                },
+                { new: true } // This option returns the updated document
+            );
+        }
+        else {
+            updatedProduct = await Product.updateMany(
+                { _id: id },
+                {
+                    $set: {
+                        productName,
+                        description,
+                        category,
+                        material,
+                        styles,
+                        size,
+                        price,
+                    }
+                },
+                { new: true } // This option returns the updated document
+            );
+        }
+
 
         if (!updatedProduct) {
             return res.status(404).json({ error: 'Product not found' });
