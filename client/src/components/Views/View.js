@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaAngleRight, FaCheck, FaRegHeart } from "react-icons/fa";
+import { FaAngleRight, FaCheck, FaRegHeart, FaHeart } from "react-icons/fa";
 import { IoStar, IoStarHalf, IoBasketSharp } from "react-icons/io5";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { BsDot } from "react-icons/bs";
@@ -9,10 +9,29 @@ import View1 from './View1';
 import View2 from './View2';
 import Footer from '../Footer';
 import Header from '../Header';
-
-
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 function View() {
+
+    const state = useLocation()
+    console.log(state);
+
+    const handleClick = async () => {
+        const userId = localStorage.getItem("id")
+        const productId = state._id
+
+        console.log(userId , productId);
+    
+        const data = {userId, productId}
+
+        const result = await axios.post("http://localhost:5555/api/v1/cart" , data)
+        if (!result) {
+            console.log("not");
+        }
+    }
+
+
     return (
         <>
             <Header />
@@ -31,7 +50,7 @@ function View() {
                             <div className='border-2 border-gray-300 rounded-md flex justify-center items-center'>
                                 <img src={require('../Views/image/image 34.png')} alt="" />
                             </div>
-                            <div className='my-5 flex justify-between items-center'>
+                            {/* <div className='my-5 flex justify-between items-center'>
                                 <div className='border-2 border-gray-300'>
                                     <img src={require('../Views/image/image 35.png')} alt="" />
                                 </div>
@@ -47,68 +66,70 @@ function View() {
                                 <div className='border-2 border-gray-300'>
                                     <img src={require('../Views/image/image 39.png')} alt="" />
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
-                        <div className='md:col-span-5 sm:col-span-7 col-span-12 lg:my-5 sm:my-1 m-5'>
-                            <div className='flex items-center text-green-400'>
-                                <FaCheck className=' me-2' />
-                                <p>In stock</p>
-                            </div>
-                            <h1 className='font-semibold text-2xl'>Men's T-Shirt</h1>
-                            <h1 className='font-semibold text-2xl pb-2 text-gray-500'>Mens Long Sleeve T-shirt Cotton Base Layer Slim Muscle</h1>
-                            <div className='flex flex-wrap items-center'>
-                                <div className='text-orange-500 flex'>
-                                    <IoStar />
-                                    <IoStar />
-                                    <IoStar />
-                                    <IoStar />
-                                    <IoStarHalf />
+                        {state &&
+                            <div className='md:col-span-5 sm:col-span-7 col-span-12 lg:my-5 sm:my-1 m-5'>
+                                <div className='flex items-center text-green-400'>
+                                    <FaCheck className=' me-2' />
+                                    <p>In stock</p>
                                 </div>
-                                <h1 className='ps-3'>9.3</h1>
-                                <BsDot />
-                                <MdMessage className='mt-1 me-2' />
-                                <h1>32 reviews</h1>
-                                <BsDot />
-                                <IoBasketSharp className='me-2 text-lg' />
-                                <p>154 sold</p>
-                            </div>
-                            <div className='text-gray-500'>
-                                <div className='flex my-3'>
-                                    <h1 className='w-32 text-xl text-black font-bold'>Price:</h1>
-                                    <div className='flex items-center text-xl text-black font-bold'>
-                                        <FaIndianRupeeSign />
-                                        <h1 className='text-2xl text-black'>8555</h1>
+                                <h1 className='font-semibold text-2xl'>{state.productName}</h1>
+                                <h1 className='font-semibold text-2xl pb-2 text-gray-500'>{state.description}</h1>
+                                <div className='flex flex-wrap items-center'>
+                                    <div className='text-orange-500 flex'>
+                                        <IoStar />
+                                        <IoStar />
+                                        <IoStar />
+                                        <IoStar />
+                                        <IoStarHalf />
                                     </div>
+                                    <h1 className='ps-3'>9.3</h1>
+                                    <BsDot />
+                                    <MdMessage className='mt-1 me-2' />
+                                    <h1>32 reviews</h1>
+                                    <BsDot />
+                                    <IoBasketSharp className='me-2 text-lg' />
+                                    <p>154 sold</p>
                                 </div>
-                                <hr />
-                                <div className='flex mt-3'>
-                                    <h1 className='w-32'>Type:</h1>
-                                    <p>Classic shoes</p>
+                                <div className='text-gray-500'>
+                                    <div className='flex my-3'>
+                                        <h1 className='w-32 text-xl text-black font-bold'>Price:</h1>
+                                        <div className='flex items-center text-xl text-black font-bold'>
+                                            <FaIndianRupeeSign />
+                                            <h1 className='text-2xl text-black'>8555</h1>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div className='flex mt-3'>
+                                        <h1 className='w-32'>Type:</h1>
+                                        <p>Classic shoes</p>
+                                    </div>
+                                    <div className='flex mt-3'>
+                                        <h1 className='w-32'>Material:</h1>
+                                        <p>Plastic material</p>
+                                    </div>
+                                    <div className='flex my-3'>
+                                        <h1 className='w-32'>Design:</h1>
+                                        <p>Modern nice</p>
+                                    </div>
+                                    <hr />
+                                    <div className='flex my-3'>
+                                        <h1 className='w-32'>Customization:</h1>
+                                        <p>Customized logo and design custom packages</p>
+                                    </div>
+                                    <div className='flex my-3'>
+                                        <h1 className='w-32'>Protection:</h1>
+                                        <p>Refund Policy</p>
+                                    </div>
+                                    <div className='flex my-3'>
+                                        <h1 className='w-32'>Warranty:</h1>
+                                        <p>2 year full warranty</p>
+                                    </div>
+                                    <hr />
                                 </div>
-                                <div className='flex mt-3'>
-                                    <h1 className='w-32'>Material:</h1>
-                                    <p>Plastic material</p>
-                                </div>
-                                <div className='flex my-3'>
-                                    <h1 className='w-32'>Design:</h1>
-                                    <p>Modern nice</p>
-                                </div>
-                                <hr />
-                                <div className='flex my-3'>
-                                    <h1 className='w-32'>Customization:</h1>
-                                    <p>Customized logo and design custom packages</p>
-                                </div>
-                                <div className='flex my-3'>
-                                    <h1 className='w-32'>Protection:</h1>
-                                    <p>Refund Policy</p>
-                                </div>
-                                <div className='flex my-3'>
-                                    <h1 className='w-32'>Warranty:</h1>
-                                    <p>2 year full warranty</p>
-                                </div>
-                                <hr />
                             </div>
-                        </div>
+                        }
                         <div className='md:col-span-3 sm:col-span-5 col-span-12 lg:p-5 sm:p-1 p-5'>
                             <div className="border-2 border-gray-300 p-5 rounded-md">
                                 <div className='flex mb-5'>
@@ -142,8 +163,9 @@ function View() {
                             </div>
 
                             <div className='flex justify-center items-center py-10'>
-                                <FaRegHeart className='text-2xl text-blue-500 me-3' />
-                                <h1 className='text-blue-500 text-2xl'>Save for later</h1>
+                                {/* <FaRegHeart className='text-2xl text-blue-500 me-3' /> */}
+                                <FaHeart className='text-2xl text-blue-500 me-3' onClick={handleClick} />
+                                <h1 className='text-blue-500 text-2xl'>My Cart</h1>
                             </div>
                         </div>
                     </div>

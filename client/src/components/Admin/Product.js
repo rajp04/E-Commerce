@@ -29,7 +29,7 @@ function Product() {
     return <div>Error: {error}</div>;
   }
 
-  console.log(productData);
+  // console.log(productData);
 
   return (
     <div className='pt-20 px-5 bg-gray-200'>

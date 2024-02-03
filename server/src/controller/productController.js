@@ -162,3 +162,17 @@ module.exports.deleteProduct = async (req, res) => {
         });
     }
 };
+
+
+// Get Product By Id
+module.exports.getProduct = async (req, res) => {
+    id = req.params.id
+    // Retrieve products from the database using the Product model
+    const result = await Product.findById({ _id: id });
+
+    // Respond with a success message and the retrieved products
+    res.status(200).json({
+        success: 1,
+        result
+    });
+}
