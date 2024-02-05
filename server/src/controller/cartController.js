@@ -10,11 +10,11 @@ module.exports.getCart = async (req, res) => {
 
 // add to cart
 module.exports.addToCart = async (req, res) => {
-    const { userId, productId } = req.body; // Assuming the data is sent in the request body
+    const { userId, productId } = req.params; // Assuming the data is sent in the request body
 
     try {
         // Add the product to the user's cart (assuming you have a User model with a cart property)
-        const updatedUser = await Cart.findByIdAndUpdate(
+        const updatedUser = await Cart.Create(
             userId, productId,
             { new: true }
         );

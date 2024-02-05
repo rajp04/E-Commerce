@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react'
-import { FaAngleRight, FaCheck, FaRegHeart, FaHeart } from "react-icons/fa";
+import { FaAngleRight, FaCheck, FaHeart } from "react-icons/fa";
 import { IoStar, IoStarHalf, IoBasketSharp } from "react-icons/io5";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { BsDot } from "react-icons/bs";
@@ -9,28 +10,52 @@ import View1 from './View1';
 import View2 from './View2';
 import Footer from '../Footer';
 import Header from '../Header';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 function View() {
 
-    const state = useLocation()
-    console.log(state);
+    const { id } = useParams()
+    const [data, setData] = useState()
 
+    const userId = localStorage.getItem("id");
+    const productId = id;
     const handleClick = async () => {
-        const userId = localStorage.getItem("id")
-        const productId = state._id
+        const data = { userId, productId };
+        // console.log(userId, productId);
 
-        console.log(userId , productId);
-    
-        const data = {userId, productId}
+        try {
+            const result = await axios.post("http://localhost:5555/api/v1/cart/addcart", data);
 
-        const result = await axios.post("http://localhost:5555/api/v1/cart" , data)
-        if (!result) {
-            console.log("not");
+            // Check if the request was successful based on the status code or other criteria
+            if (result.status === 200) {
+                console.log("Successfully added to cart");
+                // You can also handle the response data here if needed: result.data
+            } else {
+                console.log("Request was not successful");
+            }
+        } catch (error) {
+            console.error("Error making the request:", error.message);
+            // Handle the error as needed
         }
-    }
+    };
 
+    useEffect(() => {
+        const getProductInfo = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5555/api/v1/product/getproduct/${id}`);
+                // Handle the response data here
+                setData(response.data.result);
+            } catch (error) {
+                // Handle errors here
+                console.error('Error fetching data:', error);
+            }
+        };
+        getProductInfo();
+    }, []);
+
+    // console.log(data);
 
     return (
         <>
@@ -46,89 +71,74 @@ function View() {
 
                 <div className='border-2 rounded-md bg-white border-gray-300'>
                     <div className='grid grid-cols-12 lg:gap-5 gap-1'>
-                        <div className='md:col-span-4 sm:col-span-5 col-span-12 lg:m-5 sm:m-1 m-5 '>
-                            <div className='border-2 border-gray-300 rounded-md flex justify-center items-center'>
-                                <img src={require('../Views/image/image 34.png')} alt="" />
-                            </div>
-                            {/* <div className='my-5 flex justify-between items-center'>
-                                <div className='border-2 border-gray-300'>
-                                    <img src={require('../Views/image/image 35.png')} alt="" />
-                                </div>
-                                <div className='border-2 border-gray-300'>
-                                    <img src={require('../Views/image/image 40.png')} alt="" />
-                                </div>
-                                <div className='border-2 border-gray-300'>
-                                    <img src={require('../Views/image/image 36.png')} alt="" />
-                                </div>
-                                <div className='border-2 border-gray-300'>
-                                    <img src={require('../Views/image/image 37.png')} alt="" />
-                                </div>
-                                <div className='border-2 border-gray-300'>
-                                    <img src={require('../Views/image/image 39.png')} alt="" />
-                                </div>
-                            </div> */}
-                        </div>
-                        {state &&
-                            <div className='md:col-span-5 sm:col-span-7 col-span-12 lg:my-5 sm:my-1 m-5'>
-                                <div className='flex items-center text-green-400'>
-                                    <FaCheck className=' me-2' />
-                                    <p>In stock</p>
-                                </div>
-                                <h1 className='font-semibold text-2xl'>{state.productName}</h1>
-                                <h1 className='font-semibold text-2xl pb-2 text-gray-500'>{state.description}</h1>
-                                <div className='flex flex-wrap items-center'>
-                                    <div className='text-orange-500 flex'>
-                                        <IoStar />
-                                        <IoStar />
-                                        <IoStar />
-                                        <IoStar />
-                                        <IoStarHalf />
+                        {data &&
+                            <>
+                                <div className='md:col-span-4 sm:col-span-5 col-span-12 lg:m-5 sm:m-1 m-5 '>
+                                    <div className='border-2 border-gray-300 rounded-md flex justify-center items-center'>
+                                        <img src={data.image} alt="" className='h-80 p-5' />
                                     </div>
-                                    <h1 className='ps-3'>9.3</h1>
-                                    <BsDot />
-                                    <MdMessage className='mt-1 me-2' />
-                                    <h1>32 reviews</h1>
-                                    <BsDot />
-                                    <IoBasketSharp className='me-2 text-lg' />
-                                    <p>154 sold</p>
                                 </div>
-                                <div className='text-gray-500'>
-                                    <div className='flex my-3'>
-                                        <h1 className='w-32 text-xl text-black font-bold'>Price:</h1>
-                                        <div className='flex items-center text-xl text-black font-bold'>
-                                            <FaIndianRupeeSign />
-                                            <h1 className='text-2xl text-black'>8555</h1>
+                                <div className='md:col-span-5 sm:col-span-7 col-span-12 lg:my-5 sm:my-1 m-5'>
+                                    <div className='flex items-center text-green-400'>
+                                        <FaCheck className=' me-2' />
+                                        <p>In stock</p>
+                                    </div>
+                                    <h1 className='font-semibold text-2xl'>{data.productName}</h1>
+                                    <h1 className='font-semibold text-xl pb-2 text-gray-700'>{data.description}</h1>
+                                    <div className='flex flex-wrap items-center'>
+                                        <div className='text-orange-500 flex'>
+                                            <IoStar />
+                                            <IoStar />
+                                            <IoStar />
+                                            <IoStar />
+                                            <IoStarHalf />
                                         </div>
+                                        <h1 className='ps-3'>9.3</h1>
+                                        <BsDot />
+                                        <MdMessage className='mt-1 me-2' />
+                                        <h1>32 reviews</h1>
+                                        <BsDot />
+                                        <IoBasketSharp className='me-2 text-lg' />
+                                        <p>154 sold</p>
                                     </div>
-                                    <hr />
-                                    <div className='flex mt-3'>
-                                        <h1 className='w-32'>Type:</h1>
-                                        <p>Classic shoes</p>
+                                    <div className='text-gray-500'>
+                                        <div className='flex my-3'>
+                                            <h1 className='w-32 text-xl text-black font-bold'>Price:</h1>
+                                            <div className='flex items-center text-xl text-black font-bold'>
+                                                <FaIndianRupeeSign />
+                                                <h1 className='text-2xl text-black'>{data.price}</h1>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div className='flex mt-3'>
+                                            <h1 className='w-32'>Style:</h1>
+                                            <p>{data.styles}</p>
+                                        </div>
+                                        <div className='flex mt-3'>
+                                            <h1 className='w-32'>Material:</h1>
+                                            <p>{data.material}</p>
+                                        </div>
+                                        <div className='flex my-3'>
+                                            <h1 className='w-32'>Design:</h1>
+                                            <p>Modern nice</p>
+                                        </div>
+                                        <hr />
+                                        <div className='flex my-3'>
+                                            <h1 className='w-32'>Size:</h1>
+                                            <p>{data.size}</p>
+                                        </div>
+                                        <div className='flex my-3'>
+                                            <h1 className='w-32'>Protection:</h1>
+                                            <p>Refund Policy</p>
+                                        </div>
+                                        <div className='flex my-3'>
+                                            <h1 className='w-32'>Warranty:</h1>
+                                            <p>2 year full warranty</p>
+                                        </div>
+                                        <hr />
                                     </div>
-                                    <div className='flex mt-3'>
-                                        <h1 className='w-32'>Material:</h1>
-                                        <p>Plastic material</p>
-                                    </div>
-                                    <div className='flex my-3'>
-                                        <h1 className='w-32'>Design:</h1>
-                                        <p>Modern nice</p>
-                                    </div>
-                                    <hr />
-                                    <div className='flex my-3'>
-                                        <h1 className='w-32'>Customization:</h1>
-                                        <p>Customized logo and design custom packages</p>
-                                    </div>
-                                    <div className='flex my-3'>
-                                        <h1 className='w-32'>Protection:</h1>
-                                        <p>Refund Policy</p>
-                                    </div>
-                                    <div className='flex my-3'>
-                                        <h1 className='w-32'>Warranty:</h1>
-                                        <p>2 year full warranty</p>
-                                    </div>
-                                    <hr />
                                 </div>
-                            </div>
+                            </>
                         }
                         <div className='md:col-span-3 sm:col-span-5 col-span-12 lg:p-5 sm:p-1 p-5'>
                             <div className="border-2 border-gray-300 p-5 rounded-md">
