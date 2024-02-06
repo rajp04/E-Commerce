@@ -41,6 +41,7 @@ function Login() {
                         type="text"
                         name="email"
                         value={email}
+                        autoComplete="off"
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter your email"
                         className="rounded-md py-1 px-2 placeholder:text-gray-800 border-2 outline-none mb-2"
@@ -52,6 +53,7 @@ function Login() {
                         type="text"
                         name="password"
                         value={password}
+                        autoComplete="off"
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="At least 6 characters"
                         className="rounded-md py-1 px-2 placeholder:text-gray-800 border-2 outline-none mb-2"

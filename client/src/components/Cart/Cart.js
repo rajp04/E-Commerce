@@ -5,25 +5,29 @@ import axios from 'axios';
 import { MdMessage, MdOutlineShoppingCart } from "react-icons/md";
 import Header from '../Header';
 import Footer from '../Footer';
+import { useNavigate } from 'react-router-dom';
 
 function Cart() {
 
     const [cart, setCart] = useState()
     const [product, setProduct] = useState()
     const [data, setData] = useState()
-    const id = localStorage.getItem("id")
+    const [referesh, setReferesh] = useState()
+    const naviget = useNavigate()
+    const userid = localStorage.getItem("id")
 
     useEffect(() => {
         const getCart = async () => {
             try {
-                const result = await axios.get(`http://localhost:5555/api/v1/cart/getcart/${id}`);
+                const result = await axios.get(`http://localhost:5555/api/v1/cart/getcart/${userid}`);
                 setCart(result.data.result);
             } catch (error) {
                 console.error("Error fetching cart data:", error);
             }
         };
         getCart();
-    }, [id]);
+    }, [userid, referesh]);
+
 
     useEffect(() => {
         const getProduct = async () => {
@@ -52,21 +56,41 @@ function Cart() {
         }
     }, [cart, product]);
 
+
     const handleDelete = async () => {
         try {
-            await axios.delete(`http://localhost:5555/api/v1/cart/deletecart/${id}`)
+            const ids = cart.map((item) => item._id);
+            for (const id of ids) {
+                const response = await axios.delete(`http://localhost:5555/api/v1/cart/deletecart/${id}`);
+                if (response.status === 200 || response.status === 204) {
+                    setReferesh(Math.random());
+                    break; // Stop the loop after deleting the first item
+                }
+            }
         } catch (error) {
-            console.error("Error fetching product data:", error);
+            console.error("Error deleting item(s) from the cart:", error);
         }
     }
 
-    console.log(data);
+
+    const handleAllDelete = async () => {
+        try {
+            const response = await axios.delete(`http://localhost:5555/api/v1/cart/deleteallitem/${userid}`);
+            if (response.status === 200 || response.status === 204) {
+                setReferesh(Math.random())
+                console.log("Delete Successfully");
+            }
+        } catch (error) {
+            console.error("Error deleting item(s) from the cart:", error);
+        }
+    }
+
     return (
         <>
             <Header />
             <div className='xl:px-28 lg:px-16 md:px-6 sm:px-2 bg-gray-100 py-5'>
                 <h1 className='font-bold text-2xl pb-5'>My Cart (3)</h1>
-                <div className='grid grid-cols-12 gap-5'>
+                <div className='grid grid-cols-12 gap-5' >
                     <div className='border-2 lg:col-span-9 sm:col-span-8 col-span-12 border-gray-300 bg-white rounded-md p-5'>
                         {data && data.map(item => (
                             <>
@@ -80,7 +104,7 @@ function Cart() {
                                             <p className='text-gray-500'>Size: Medium, Color: Blue, Material: Plastic</p>
                                             <p className='text-gray-500 mb-2'>Seller: Artel Market</p>
                                             <div className='flex'>
-                                                <button className='text-red-500 font-medium border-2 py-1 px-2 rounded-md' onClick={handleDelete}>Remove</button>
+                                                <button className='text-red-500 font-medium border-2 py-1 px-2 rounded-md' onClick={() => handleDelete()}>Remove</button>
                                             </div>
                                         </div>
                                     </div>
@@ -111,9 +135,9 @@ function Cart() {
                         <div className='flex justify-between items-center mt-5'>
                             <button className='flex justify-center items-center space-x-3 bg-blue-500 text-white py-1 px-3 rounded-md'>
                                 <FaArrowLeft />
-                                <h1 className='text-xl'>Back to shop</h1>
+                                <h1 className='text-xl' onClick={() => naviget("/filter")}>Back to shop</h1>
                             </button>
-                            <button className='border-2 border-gray-300 text-blue-500 py-1 px-3 rounded-md text-xl'>
+                            <button className='border-2 border-gray-300 text-blue-500 py-1 px-3 rounded-md text-xl' onClick={() => handleAllDelete()}>
                                 Remove All
                             </button>
                         </div>

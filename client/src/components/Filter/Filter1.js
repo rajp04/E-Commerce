@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { ProductData } from '../../thunks/ProductThunk'
 import { FaIndianRupeeSign } from 'react-icons/fa6'
+import ReactLoading from "react-loading";
+import axios from 'axios'
 
 function Filter1() {
 
@@ -16,6 +18,7 @@ function Filter1() {
     const productData = useSelector((state) => state.product.productData);
     const loading = useSelector((state) => state.product.loading);
     const error = useSelector((state) => state.product.error);
+    const userId = localStorage.getItem("id");
 
     useEffect(() => {
         // Use an immediately-invoked function expression (IIFE) for the async function
@@ -30,18 +33,53 @@ function Filter1() {
     }, [dispatch]);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className='flex items-center justify-center'>
+            <ReactLoading type="balls" color="#0000FF"
+                height={100} width={50} />
+            <ReactLoading type="bars" color="#0000FF"
+                height={100} width={50} />
+            <ReactLoading type="bubbles" color="#0000FF"
+                height={100} width={50} />
+            <ReactLoading type="cubes" color="#0000FF"
+                height={100} width={50} />
+            <ReactLoading type="cylon" color="#0000FF"
+                height={100} width={50} />
+            <ReactLoading type="spin" color="#0000FF"
+                height={100} width={50} />
+            <ReactLoading type="spokes" color="#0000FF"
+                height={100} width={50} />
+            <ReactLoading
+                type="spinningBubbles"
+                color="#0000FF"
+                height={100}
+                width={50}
+            />
+        </div>
     }
 
     if (error) {
         return <div>Error: {error}</div>;
     }
 
-    // console.log(productData);
+    const handleClick = async (id) => {
+        const data = { userId, productId: id };
+        // console.log(userId, productId);
+        try {
+            const result = await axios.post("http://localhost:5555/api/v1/cart/addcart", data);
+
+            if (result.status === 200) {
+                console.log("Successfully added to cart");
+            } else {
+                console.log("Request was not successful");
+            }
+        } catch (error) {
+            console.error("Error making the request:", error.message);
+        }
+    };
     return (
         <>
             {productData &&
-                <div className='border-2 px-5 mb-5 border-gray-300 rounded-md bg-white flex justify-between items-center'>
+                <div className='border-2 px-5 mb-5 border-gray-300 rounded-md bg-white flex justify-between items-center' >
                     <div className='py-2'>
                         <h1 className='text-xl'>{productData.result.length} items in <span className='font-semibold'> Mobile accessory</span></h1>
                     </div>
@@ -60,27 +98,29 @@ function Filter1() {
                 <div className='border-2 border-gray-300 rounded-md bg-white p-5' >
                     <div className='flex items-center space-y-2 flex-row' key={item._id}>
                         <img src={item.image} alt="" className='basis-1/4 h-48 w-40 p-4' />
-                        <div className='ps-2 relative basis-3/4 cursor-pointer' onClick={() => navigate(`/view/${item._id}`)}>
-                            <h1 className='font-medium text-3xl'>{item.productName}</h1>
-                            <h1 className='font-bold text-2xl flex items-center py-1'> <FaIndianRupeeSign />{item.price} </h1>
-                            <div className='flex items-center'>
-                                <IoStar className='text-orange-500' />
-                                <IoStar className='text-orange-500' />
-                                <IoStar className='text-orange-500' />
-                                <IoStar className='text-orange-500' />
-                                <IoStarOutline className='text-orange-500' />
-                                <h1 className='text-orange-500 px-1'>7.5</h1>
-                                <div className='text-gray-500 flex items-center space-x-2'>
-                                    <BsDot />
-                                    <h1>154 orders</h1>
-                                    <BsDot />
+                        <div className='ps-2 relative basis-3/4 cursor-pointer'>
+                            <div onClick={() => navigate(`/view/${item._id}`)}>
+                                <h1 className='font-medium text-3xl'>{item.productName}</h1>
+                                <h1 className='font-bold text-2xl flex items-center py-1'> <FaIndianRupeeSign />{item.price} </h1>
+                                <div className='flex items-center'>
+                                    <IoStar className='text-orange-500' />
+                                    <IoStar className='text-orange-500' />
+                                    <IoStar className='text-orange-500' />
+                                    <IoStar className='text-orange-500' />
+                                    <IoStarOutline className='text-orange-500' />
+                                    <h1 className='text-orange-500 px-1'>7.5</h1>
+                                    <div className='text-gray-500 flex items-center space-x-2'>
+                                        <BsDot />
+                                        <h1>154 orders</h1>
+                                        <BsDot />
+                                    </div>
+                                    <h1 className='text-green-500'>Free Shipping</h1>
                                 </div>
-                                <h1 className='text-green-500'>Free Shipping</h1>
+                                <p className='text-gray-500 pe-20'>{item.description}</p>
+                                <h1 className='text-blue-500'>View details</h1>
                             </div>
-                            <p className='text-gray-500 pe-20'>{item.description}</p>
-                            <h1 className='text-blue-500'>View details</h1>
                             <div className='border-2 border-gray-300 p-2 absolute rounded-md bg-white right-0 top-0'>
-                                <FaRegHeart className='text-blue-500 text-xl' />
+                                <FaRegHeart className='text-blue-500 text-xl' onClick={() => handleClick(item._id)} />
                             </div>
                         </div>
                     </div>
@@ -121,7 +161,6 @@ function Filter1() {
                                 <span className="sr-only">Previous</span>
                                 <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
                             </Link>
-                            {/* Current: "z-10 bg-indigo-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600", Default: "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0" */}
                             <Link
                                 to="#"
                                 aria-current="page"

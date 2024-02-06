@@ -1,5 +1,5 @@
 /* eslint-disable eqeqeq */
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import axios from 'axios';
 
 function ProductList() {
   const navigate = useNavigate()
+  const [referesh, setReferesh] = useState()
   const dispatch = useDispatch()
   const productData = useSelector((state) => state.product.productData)
   const loading = useSelector((state) => state.product.loading);
@@ -15,7 +16,7 @@ function ProductList() {
 
   useEffect(() => {
     dispatch(ProductData())
-  }, [dispatch])
+  }, [dispatch, referesh])
 
   const handleDelete = async (id) => {
     try {
@@ -23,7 +24,7 @@ function ProductList() {
 
       if (response.status == 200) {
         console.log('Product deleted successfully');
-        window.location.reload();
+        setReferesh(Math.random())
       } else {
         console.error('Failed to delete product. Server responded with:', response.data);
       }

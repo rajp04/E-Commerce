@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react'
-import { FaAngleRight, FaCheck, FaHeart } from "react-icons/fa";
+import { FaAngleRight, FaCheck, FaHeart, FaRegHeart } from "react-icons/fa";
 import { IoStar, IoStarHalf, IoBasketSharp } from "react-icons/io5";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { BsDot } from "react-icons/bs";
@@ -18,6 +18,7 @@ function View() {
 
     const { id } = useParams()
     const [data, setData] = useState()
+    // const [cart, setCart] = useState()
 
     const userId = localStorage.getItem("id");
     const productId = id;
@@ -50,7 +51,19 @@ function View() {
         getProductInfo();
     }, []);
 
-    // console.log(data);
+    // useEffect(() => {
+    //     const getCartItem = async () => {
+    //         try {
+    //             const response = await axios.get(`http://localhost:5555/api/v1/cart/getcart/${userId}`);
+    //             setCart(response.data.result);
+    //         } catch (error) {
+    //             console.error('Error fetching data:', error);
+    //         }
+    //     }
+    //     getCartItem()
+    // }, [])
+
+    // console.log(cart);
 
     return (
         <>
@@ -65,8 +78,8 @@ function View() {
                 {/* ///////////// */}
 
                 <div className='border-2 rounded-md bg-white border-gray-300'>
-                    <div className='grid grid-cols-12 lg:gap-5 gap-1'>
-                        {data &&
+                    {data &&
+                        <div className='grid grid-cols-12 lg:gap-5 gap-1'>
                             <>
                                 <div className='md:col-span-4 sm:col-span-5 col-span-12 lg:m-5 sm:m-1 m-5 '>
                                     <div className='border-2 border-gray-300 rounded-md flex justify-center items-center'>
@@ -134,46 +147,46 @@ function View() {
                                     </div>
                                 </div>
                             </>
-                        }
-                        <div className='md:col-span-3 sm:col-span-5 col-span-12 lg:p-5 sm:p-1 p-5'>
-                            <div className="border-2 border-gray-300 p-5 rounded-md">
-                                <div className='flex mb-5'>
-                                    <div className='bg-cyan-100 py-2 px-3 rounded-md me-3'>
-                                        <h1 className='font-bold text-2xl text-teal-400'>R</h1>
+                            <div className='md:col-span-3 sm:col-span-5 col-span-12 lg:p-5 sm:p-1 p-5'>
+                                <div className="border-2 border-gray-300 p-5 rounded-md">
+                                    <div className='flex mb-5'>
+                                        <div className='bg-cyan-100 py-2 px-3 rounded-md me-3'>
+                                            <h1 className='font-bold text-2xl text-teal-400'>R</h1>
+                                        </div>
+                                        <div className='flex flex-col'>
+                                            <h1>Supplier</h1>
+                                            <h1>Guanjoi Trading LLC</h1>
+                                        </div>
                                     </div>
-                                    <div className='flex flex-col'>
-                                        <h1>Supplier</h1>
-                                        <h1>Guanjoi Trading LLC</h1>
+                                    <hr />
+                                    <div className='mt-3 text-gray-400'>
+                                        <div className='flex items-center mb-2'>
+                                            <img src={require('../../image/india.png')} alt="" className='me-5' />
+                                            <h1>Ahmedabad, India</h1>
+                                        </div>
+                                        <div className='flex items-center mb-2'>
+                                            <MdSecurity className='me-7 text-2xl' />
+                                            <h1>Verfied Seller</h1>
+                                        </div>
+                                        <div className='flex items-center'>
+                                            <TbWorld className='me-7 text-2xl' />
+                                            <h1>Worldwide shipping</h1>
+                                        </div>
+                                    </div>
+                                    <div className='flex flex-col mt-5'>
+                                        <button className='bg-blue-500 text-white rounded-md text-xl py-1 mb-2'>Send inquiry</button>
+                                        <button className='text-blue-500 border-2 border-gray-300 rounded-md text-xl py-1'>Seller's profile</button>
                                     </div>
                                 </div>
-                                <hr />
-                                <div className='mt-3 text-gray-400'>
-                                    <div className='flex items-center mb-2'>
-                                        <img src={require('../../image/india.png')} alt="" className='me-5' />
-                                        <h1>Ahmedabad, India</h1>
-                                    </div>
-                                    <div className='flex items-center mb-2'>
-                                        <MdSecurity className='me-7 text-2xl' />
-                                        <h1>Verfied Seller</h1>
-                                    </div>
-                                    <div className='flex items-center'>
-                                        <TbWorld className='me-7 text-2xl' />
-                                        <h1>Worldwide shipping</h1>
-                                    </div>
-                                </div>
-                                <div className='flex flex-col mt-5'>
-                                    <button className='bg-blue-500 text-white rounded-md text-xl py-1 mb-2'>Send inquiry</button>
-                                    <button className='text-blue-500 border-2 border-gray-300 rounded-md text-xl py-1'>Seller's profile</button>
-                                </div>
-                            </div>
 
-                            <div className='flex justify-center items-center py-10'>
-                                {/* <FaRegHeart className='text-2xl text-blue-500 me-3' /> */}
-                                <FaHeart className='text-2xl text-blue-500 me-3' onClick={handleClick} />
-                                <h1 className='text-blue-500 text-2xl'>My Cart</h1>
+                                <div className='flex justify-center items-center py-10'>
+                                    <FaRegHeart className='text-2xl text-blue-500 me-3' onClick={() => handleClick()} />
+                                    <FaHeart className='text-2xl text-blue-500 me-3' />
+                                    <h1 className='text-blue-500 text-2xl'>My Cart</h1>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 </div>
 
 

@@ -40,8 +40,18 @@ module.exports.addToCart = async (req, res) => {
             });
         }
 
+        const alreadyAddCart = await Cart.findOne({ userId , productId });
+        if (alreadyAddCart) {
+          return res.json({
+            success: 0,
+            message: "Cart already exists",
+          });
+        }
+
         const result = await Cart.create({ userId, productId })
         res.json({
+            success: 1,
+            message: "Successfully Added in Cart",
             result
         })
     } catch (error) {
@@ -53,16 +63,66 @@ module.exports.addToCart = async (req, res) => {
 };
 
 
-// remove item from cart
+// remove item from Id cart
 module.exports.removeItemCart = async (req, res) => {
     try {
-        const id = req.params.id
+        const id = req.params.id;
 
-        await Cart.findOneAndDelete({ _id: id })
-    } catch (error) {
+        // Find the item in the cart and delete it
+        const deletedItem = await Cart.deleteOne({ _id: id });
+
+        if (!deletedItem) {
+            // If the item is not found, send an error response
+            return res.status(404).json({
+                success: 0,
+                errorMessage: 'Item not found in the cart.'
+            });
+        }
+
+        // If the item is successfully removed, send a success response
         res.json({
+            success: 1,
+            message: 'Item removed from the cart successfully.'
+        });
+    } catch (error) {
+        // If an error occurs during the process, send an error response
+        res.status(500).json({
             success: 0,
-            errorMessage: `Error in adding the product to the cart ${error}`
-        })
+            errorMessage: `Error in removing the item from the cart: ${error}`
+        });
     }
 }
+
+
+// remove all items from user's cart
+module.exports.removeAllItem = async (req, res) => {
+    try {
+        const Id = req.params.id;
+
+        // Assuming 'userId' is the field in your Cart schema representing the user's ID
+        // Delete all cart items for the user with the given ID
+        const deleteResult = await Cart.deleteMany({ userId : Id });
+        console.log(deleteResult);
+
+        if (deleteResult.deletedCount > 0) {
+            res.json({
+                success: 1,
+                message: 'All items removed from the cart successfully.'
+            });
+        } else {
+            res.json({
+                success: 0,
+                message: 'No items found in the cart for the specified user.'
+            });
+        }
+    } catch (error) {
+        // If an error occurs during the process, send an error response
+        console.error(error); 
+        res.status(500).json({
+            success: 0,
+            errorMessage: `Error in removing items from the cart: ${error}`
+        });
+    }
+
+}
+
