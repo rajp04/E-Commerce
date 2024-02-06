@@ -1,11 +1,66 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaArrowLeft, FaTruckMoving } from "react-icons/fa6";
 import { IoMdLock } from "react-icons/io";
+import axios from 'axios';
 import { MdMessage, MdOutlineShoppingCart } from "react-icons/md";
 import Header from '../Header';
 import Footer from '../Footer';
 
 function Cart() {
+
+    const [cart, setCart] = useState()
+    const [product, setProduct] = useState()
+    const [data, setData] = useState()
+    const id = localStorage.getItem("id")
+
+    useEffect(() => {
+        const getCart = async () => {
+            try {
+                const result = await axios.get(`http://localhost:5555/api/v1/cart/getcart/${id}`);
+                setCart(result.data.result);
+            } catch (error) {
+                console.error("Error fetching cart data:", error);
+            }
+        };
+        getCart();
+    }, [id]);
+
+    useEffect(() => {
+        const getProduct = async () => {
+            try {
+                const result = await axios.get(`http://localhost:5555/api/v1/product/product`);
+                setProduct(result.data.result);
+            } catch (error) {
+                console.error("Error fetching product data:", error);
+            }
+        };
+        getProduct();
+    }, []);
+
+
+    useEffect(() => {
+        if (cart && product) {
+            const obj = [];
+            for (let x = 0; x < cart.length; x++) {
+                product.forEach((pId) => {
+                    if (pId._id === cart[x].productId) {
+                        obj.push(pId);
+                    }
+                });
+            }
+            setData(obj);
+        }
+    }, [cart, product]);
+
+    const handleDelete = async () => {
+        try {
+            await axios.delete(`http://localhost:5555/api/v1/cart/deletecart/${id}`)
+        } catch (error) {
+            console.error("Error fetching product data:", error);
+        }
+    }
+
+    console.log(data);
     return (
         <>
             <Header />
@@ -13,32 +68,46 @@ function Cart() {
                 <h1 className='font-bold text-2xl pb-5'>My Cart (3)</h1>
                 <div className='grid grid-cols-12 gap-5'>
                     <div className='border-2 lg:col-span-9 sm:col-span-8 col-span-12 border-gray-300 bg-white rounded-md p-5'>
-                        <div className='justify-between sm:flex mb-5'>
-                            <div className='sm:flex justify-center items-center'>
-                                <div className='border-2 border-gray-300 p-1 rounded-md flex items-center justify-center w-fit'>
-                                    <img src={require('../Cart/image/Bitmap.png')} alt="" />
-                                </div>
-                                <div className='ms-3'>
-                                    <h1 className='font-semibold text-xl mb-1'>T-shirts with multiple colors, for men and lady</h1>
-                                    <p className='text-gray-500'>Size: Medium, Color: Blue, Material: Plastic</p>
-                                    <p className='text-gray-500 mb-2'>Seller: Artel Market</p>
-                                    <div className='flex'>
-                                        <button className='text-red-500 font-medium border-2 py-1 px-2 rounded-md'>Remove</button>
-                                        <button className='text-blue-500 font-medium border-2 py-1 px-2 rounded-md ms-3'>Save for later</button>
+                        {data && data.map(item => (
+                            <>
+                                <div className='justify-between sm:flex mb-5 pt-2' key={item._id}>
+                                    <div className='sm:flex justify-center items-center'>
+                                        <div className='border-2 border-gray-300 p-1 rounded-md flex items-center justify-center w-fit'>
+                                            <img src={item.image} alt="" className='w-40 h-40' />
+                                        </div>
+                                        <div className='ms-3'>
+                                            <h1 className='font-semibold text-xl mb-1'>{item.productName}</h1>
+                                            <p className='text-gray-500'>Size: Medium, Color: Blue, Material: Plastic</p>
+                                            <p className='text-gray-500 mb-2'>Seller: Artel Market</p>
+                                            <div className='flex'>
+                                                <button className='text-red-500 font-medium border-2 py-1 px-2 rounded-md' onClick={handleDelete}>Remove</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className='flex items-center mt-3'>
+                                            <h1 className='font-semibold text-xl mb-3 text-end'>Price: </h1>
+                                            <h1 className='font-semibold text-xl mb-3 text-end'> {item.price}</h1>
+                                        </div>
+                                        <div className='flex flex-wrap items-center'>
+                                            <h1 className='font-bold text-2xl pe-2'>Qty:</h1>
+                                            <select className='border-2 rounded-md border-gray-100 p-1 font-bold text-xl outline-none'>
+                                                <option >1</option>
+                                                <option >2</option>
+                                                <option >3</option>
+                                                <option >4</option>
+                                                <option >5</option>
+                                                <option >6</option>
+                                                <option >7</option>
+                                                <option >8</option>
+                                                <option >9</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div>
-                                <div className='flex items-center mt-3'>
-                                    <h1 className='font-semibold text-xl mb-3 text-end'>Price:</h1>
-                                    <h1 className='font-semibold text-xl mb-3 text-end'>$78.99</h1>
-                                </div>
-                                <div className='flex flex-wrap'>
-                                    <input type="number" placeholder='Qty: 9' className='placeholder:text-black placeholder:font-bold py-1 px-2 border-2 border-gray-300 outline-none rounded-md w-full' />
-                                </div>
-                            </div>
-                        </div>
-                        <hr />
+                                <hr />
+                            </>
+                        ))}
                         <div className='flex justify-between items-center mt-5'>
                             <button className='flex justify-center items-center space-x-3 bg-blue-500 text-white py-1 px-3 rounded-md'>
                                 <FaArrowLeft />

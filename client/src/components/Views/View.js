@@ -21,23 +21,20 @@ function View() {
 
     const userId = localStorage.getItem("id");
     const productId = id;
+
     const handleClick = async () => {
         const data = { userId, productId };
         // console.log(userId, productId);
-
         try {
             const result = await axios.post("http://localhost:5555/api/v1/cart/addcart", data);
 
-            // Check if the request was successful based on the status code or other criteria
             if (result.status === 200) {
                 console.log("Successfully added to cart");
-                // You can also handle the response data here if needed: result.data
             } else {
                 console.log("Request was not successful");
             }
         } catch (error) {
             console.error("Error making the request:", error.message);
-            // Handle the error as needed
         }
     };
 
@@ -45,10 +42,8 @@ function View() {
         const getProductInfo = async () => {
             try {
                 const response = await axios.get(`http://localhost:5555/api/v1/product/getproduct/${id}`);
-                // Handle the response data here
                 setData(response.data.result);
             } catch (error) {
-                // Handle errors here
                 console.error('Error fetching data:', error);
             }
         };

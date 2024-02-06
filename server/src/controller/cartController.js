@@ -1,27 +1,68 @@
-const productSchema = require("../models/productModels.js")
-const cartSchema = require("../models/cartModels.js")
-const Product = productSchema;
-const Cart = cartSchema;
+const cartSchema = require("../models/cartModels.js");
+const Cart = cartSchema.Cart;
 
 // get all cart item 
-module.exports.getCart = async (req, res) => {
+module.exports.getItemCart = async (req, res) => {
+    try {
+        const id = req.params.id
+        // Retrieve all products from the database using the Product model
+        const result = await Cart.find({ userId: id });
+
+        // Respond with a success message and the retrieved products
+        res.status(200).json({
+            success: 1,
+            result
+        });
+
+    } catch (error) {
+        // Handle any errors that occur during the process
+        console.error(error);
+
+        // Respond with an error message and status 400
+        res.status(400).json({
+            success: 0,
+            message: 'Error in fetching products'
+        });
+    }
+
 };
 
 
 // add to cart
 module.exports.addToCart = async (req, res) => {
-    const { userId, productId } = req.params; // Assuming the data is sent in the request body
-
     try {
-        // Add the product to the user's cart (assuming you have a User model with a cart property)
-        const updatedUser = await Cart.Create(
-            userId, productId,
-            { new: true }
-        );
+        const { userId, productId } = req.body
 
-        res.status(200).json({ message: 'Product added to cart successfully', updatedUser });
+        if (!userId || !productId) {
+            return res.json({
+                success: 0,
+                message: "User ID and Product ID not Found",
+            });
+        }
+
+        const result = await Cart.create({ userId, productId })
+        res.json({
+            result
+        })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
+        res.json({
+            success: 0,
+            errorMessage: `Error in adding the product to the cart ${error}`
+        })
     }
 };
+
+
+// remove item from cart
+module.exports.removeItemCart = async (req, res) => {
+    try {
+        const id = req.params.id
+
+        await Cart.findOneAndDelete({ _id: id })
+    } catch (error) {
+        res.json({
+            success: 0,
+            errorMessage: `Error in adding the product to the cart ${error}`
+        })
+    }
+}

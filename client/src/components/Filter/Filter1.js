@@ -57,10 +57,10 @@ function Filter1() {
             }
 
             {productData && productData.result.map(item => (
-                <div className='border-2 border-gray-300 rounded-md bg-white p-5' onClick={() => navigate(`/view/${item._id}`)}>
+                <div className='border-2 border-gray-300 rounded-md bg-white p-5' >
                     <div className='flex items-center space-y-2 flex-row' key={item._id}>
                         <img src={item.image} alt="" className='basis-1/4 h-48 w-40 p-4' />
-                        <div className='ps-2 relative basis-3/4'>
+                        <div className='ps-2 relative basis-3/4 cursor-pointer' onClick={() => navigate(`/view/${item._id}`)}>
                             <h1 className='font-medium text-3xl'>{item.productName}</h1>
                             <h1 className='font-bold text-2xl flex items-center py-1'> <FaIndianRupeeSign />{item.price} </h1>
                             <div className='flex items-center'>
