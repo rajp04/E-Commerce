@@ -1,13 +1,28 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaUserLarge, FaHeart, FaCartShopping, FaAngleDown } from "react-icons/fa6";
 import { BiSolidMessageDetail } from "react-icons/bi";
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
+import axios from 'axios';
 
 function Header() {
     const navigate = useNavigate()
-
+    const [cart, setCart] = useState()
+    const [refersh, setRefersh] = useState()
     const user = localStorage.getItem("id")
+
+    useEffect(() => {
+        const getCart = async () => {
+            try {
+                const result = await axios.get(`http://localhost:5555/api/v1/cart/getcart/${user}`);
+                setCart(result.data.result);
+                setRefersh(Math.random())
+            } catch (error) {
+                console.error("Error fetching cart data:", error);
+            }
+        };
+        getCart();
+    }, [user, refersh]);
 
     return (
         <>
@@ -39,7 +54,10 @@ function Header() {
                                 <FaHeart className='md:text-xl' />
                                 <h1 className='text-sm'>Orders</h1>
                             </div>
-                            <div className='flex-col flex items-center justify-center cursor-pointer' onClick={() => navigate('/cart')}>
+                            <div className='flex-col flex items-center justify-center cursor-pointer relative' onClick={() => navigate('/cart')}>
+                                {cart && 
+                                <h1 className='absolute text-blue-700 font-bold text-xl -top-4'>{cart.length}</h1>
+                                }
                                 <FaCartShopping className='md:text-xl' />
                                 <h1 className='text-sm whitespace-nowrap'>My Cart</h1>
                             </div>

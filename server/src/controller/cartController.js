@@ -40,12 +40,12 @@ module.exports.addToCart = async (req, res) => {
             });
         }
 
-        const alreadyAddCart = await Cart.findOne({ userId , productId });
+        const alreadyAddCart = await Cart.findOne({ userId, productId });
         if (alreadyAddCart) {
-          return res.json({
-            success: 0,
-            message: "Cart already exists",
-          });
+            return res.json({
+                success: 0,
+                message: "Cart already exists",
+            });
         }
 
         const result = await Cart.create({ userId, productId })
@@ -97,27 +97,15 @@ module.exports.removeItemCart = async (req, res) => {
 // remove all items from user's cart
 module.exports.removeAllItem = async (req, res) => {
     try {
-        const Id = req.params.id;
+        const userId = req.params.id;
 
         // Assuming 'userId' is the field in your Cart schema representing the user's ID
         // Delete all cart items for the user with the given ID
-        const deleteResult = await Cart.deleteMany({ userId : Id });
+        const deleteResult = await Cart.findByIdAndDelete(userId);
         console.log(deleteResult);
-
-        if (deleteResult.deletedCount > 0) {
-            res.json({
-                success: 1,
-                message: 'All items removed from the cart successfully.'
-            });
-        } else {
-            res.json({
-                success: 0,
-                message: 'No items found in the cart for the specified user.'
-            });
-        }
     } catch (error) {
         // If an error occurs during the process, send an error response
-        console.error(error); 
+        console.error(error);
         res.status(500).json({
             success: 0,
             errorMessage: `Error in removing items from the cart: ${error}`

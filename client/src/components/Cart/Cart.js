@@ -89,7 +89,9 @@ function Cart() {
         <>
             <Header />
             <div className='xl:px-28 lg:px-16 md:px-6 sm:px-2 bg-gray-100 py-5'>
-                <h1 className='font-bold text-2xl pb-5'>My Cart (3)</h1>
+                {data && 
+                <h1 className='font-bold text-2xl pb-5'>My Cart ({data.length})</h1>
+                }
                 <div className='grid grid-cols-12 gap-5' >
                     <div className='border-2 lg:col-span-9 sm:col-span-8 col-span-12 border-gray-300 bg-white rounded-md p-5'>
                         {data && data.map(item => (
