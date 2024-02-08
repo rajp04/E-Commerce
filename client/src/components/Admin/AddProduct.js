@@ -13,6 +13,7 @@ function AddProduct() {
   const [size, setSize] = useState('S');
   const [price, setPrice] = useState('');
   const [image, setImage] = useState(null);
+  const [stock, setStock] = useState(null);
 
   // Function to handle file upload
   const handleChange = (image) => {
@@ -34,6 +35,7 @@ function AddProduct() {
       data.append("size", size);
       data.append("price", price);
       data.append("image", image);
+      data.append("stock", stock);
 
       // Making POST request using axios
       const response = await axios.post("http://localhost:5555/api/v1/product/addproduct", data);
@@ -49,6 +51,7 @@ function AddProduct() {
         setSize('S');
         setPrice('');
         setImage(null);
+        setStock('')
       } else {
         console.error("Failed to add product");
       }
@@ -68,6 +71,7 @@ function AddProduct() {
     setSize('S');
     setPrice('');
     setImage(null);
+    setStock('')
   };
 
   return (
@@ -114,6 +118,8 @@ function AddProduct() {
               <option>Xl</option>
               <option>XXL</option>
             </select>
+            <h1 className='pb-2 pt-3'>Stock</h1>
+            <input type="number" className='p-2 font-normal border-gray-100 border-2 outline-none rounded-md'/>
             <h1 className='pb-2 pt-3'>Price</h1>
             <input type="number" className='p-2 font-normal border-gray-100 border-2 outline-none rounded-md' value={price} onChange={e => setPrice(e.target.value)} />
           </div>

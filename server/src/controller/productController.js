@@ -5,10 +5,10 @@ const Product = productSchema;
 module.exports.addProduct = async (req, res) => {
     try {
         // Destructure the required fields from the request body
-        const { productName, description, category, material, styles, size, price } = req.body;
+        const { productName, description, category, material, styles, size, price, stock } = req.body;
 
         // Check if any of the required fields is missing
-        if (!productName || !description || !category || !material || !styles || !size || !price)
+        if (!productName || !description || !category || !material || !styles || !size || !price || !stock)
             return res.json({
                 success: 0,
                 message: "All fields are required",
@@ -26,7 +26,8 @@ module.exports.addProduct = async (req, res) => {
             image,
             styles,
             size,
-            price
+            price,
+            stock
         });
 
         // Respond with success message and status 200
@@ -76,11 +77,11 @@ module.exports.product = async (req, res) => {
 module.exports.updateProduct = async (req, res) => {
     const id = req.params.id;
 
-    const { productName, description, category, material, styles, size, price } = req.body;
+    const { productName, description, category, material, styles, size, price, stock } = req.body;
 
     const file = req.file?.filename
 
-    if (!productName || !description || !category || !material || !styles || !size || !price) {
+    if (!productName || !description || !category || !material || !styles || !size || !price || !stock) {
         return res.status(401).json({ error: 'All fields are required' });
     }
 
@@ -99,6 +100,7 @@ module.exports.updateProduct = async (req, res) => {
                         styles,
                         size,
                         price,
+                        stock,
                         image // Assuming req.file.image is the correct property
                     }
                 },
@@ -117,6 +119,7 @@ module.exports.updateProduct = async (req, res) => {
                         styles,
                         size,
                         price,
+                        stock
                     }
                 },
                 { new: true } // This option returns the updated document

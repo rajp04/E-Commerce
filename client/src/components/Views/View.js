@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react'
-import { FaAngleRight, FaCheck, FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaAngleRight, FaCheck, FaHeart } from "react-icons/fa";
 import { IoStar, IoStarHalf, IoBasketSharp } from "react-icons/io5";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { BsDot } from "react-icons/bs";
@@ -29,7 +29,7 @@ function View() {
         try {
             const result = await axios.post("http://localhost:5555/api/v1/cart/addcart", data);
 
-            if (result.status === 200) {
+            if (result.success === 1) {
                 console.log("Successfully added to cart");
             } else {
                 console.log("Request was not successful");
@@ -83,14 +83,26 @@ function View() {
                             <>
                                 <div className='md:col-span-4 sm:col-span-5 col-span-12 lg:m-5 sm:m-1 m-5 '>
                                     <div className='border-2 border-gray-300 rounded-md flex justify-center items-center'>
-                                        <img src={data.image} alt="" className='h-80 p-5' />
+                                        {data.stock > 0 ? (
+                                            <img src={data.image} alt="" className='h-80 p-5' />
+                                        ) : (
+                                            <div style={{ backgroundImage: `url(${data.image})` }} className='h-80 p-5 bg-no-repeat flex items-center justify-center bg-cover bg-center'>
+                                                <p>Out of Stock</p>
+                                            </div>
+                                        )}
                                     </div>
+
                                 </div>
                                 <div className='md:col-span-5 sm:col-span-7 col-span-12 lg:my-5 sm:my-1 m-5'>
                                     <div className='flex items-center text-green-400'>
-                                        <FaCheck className=' me-2' />
-                                        <p>In stock</p>
+                                        <FaCheck className='me-2' />
+                                        {data.stock > 0 ? (
+                                            <p>In Stock</p>
+                                        ) : (
+                                            <p>Out of Stock</p>
+                                        )}
                                     </div>
+
                                     <h1 className='font-semibold text-2xl'>{data.productName}</h1>
                                     <h1 className='font-semibold text-xl pb-2 text-gray-700'>{data.description}</h1>
                                     <div className='flex flex-wrap items-center'>
@@ -180,8 +192,8 @@ function View() {
                                 </div>
 
                                 <div className='flex justify-center items-center py-10'>
-                                    <FaRegHeart className='text-2xl text-blue-500 me-3' onClick={() => handleClick()} />
-                                    <FaHeart className='text-2xl text-blue-500 me-3' />
+                                    {/* <FaRegHeart className='text-2xl text-blue-500 me-3' /> */}
+                                    <FaHeart className='text-2xl text-blue-500 me-3' onClick={() => handleClick()} />
                                     <h1 className='text-blue-500 text-2xl'>My Cart</h1>
                                 </div>
                             </div>

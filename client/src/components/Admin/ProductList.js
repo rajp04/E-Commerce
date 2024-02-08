@@ -65,7 +65,7 @@ function ProductList() {
             <h1>{product.price}</h1>
           </div>
           <div className='col-span-2 flex justify-center items-center text-xl text-green-500'>
-            In Stock
+            In Stock({product.stock})
           </div>
           <div className='col-span-2 flex justify-center items-center space-x-2'>
             <button className='bg-blue-600 text-white rounded-md px-4 py-2' onClick={() => navigate('/admin/editproduct', { state: product })} > Edit </button>

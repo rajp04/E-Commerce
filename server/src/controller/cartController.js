@@ -1,5 +1,7 @@
 const cartSchema = require("../models/cartModels.js");
 const Cart = cartSchema.Cart;
+const productSchema = require("../models/productModels.js")
+const Product = productSchema;
 
 // get all cart item 
 module.exports.getItemCart = async (req, res) => {
@@ -31,7 +33,7 @@ module.exports.getItemCart = async (req, res) => {
 // add to cart
 module.exports.addToCart = async (req, res) => {
     try {
-        const { userId, productId } = req.body
+        const { userId, productId } = req.body;
 
         if (!userId || !productId) {
             return res.json({
@@ -40,25 +42,41 @@ module.exports.addToCart = async (req, res) => {
             });
         }
 
-        const alreadyAddCart = await Cart.findOne({ userId, productId });
-        if (alreadyAddCart) {
+        const product = await Product.findById(productId); // Assuming you have a method to find a product by its ID
+
+        if (!product) {
             return res.json({
                 success: 0,
-                message: "Cart already exists",
+                message: "Product not found",
             });
         }
 
-        const result = await Cart.create({ userId, productId })
-        res.json({
-            success: 1,
-            message: "Successfully Added in Cart",
-            result
-        })
+        if (product.stock > 0) {
+            const alreadyInCart = await Cart.findOne({ userId, productId });
+            if (alreadyInCart) {
+                return res.json({
+                    success: 0,
+                    message: "Product already in cart",
+                });
+            }
+            
+            const result = await Cart.create({ userId, productId });
+            return res.json({
+                success: 1,
+                message: "Successfully added to cart",
+                result
+            });
+        } else {
+            return res.json({
+                success: 0,
+                message: "This product is out of stock",
+            });
+        }
     } catch (error) {
-        res.json({
+        return res.json({
             success: 0,
             errorMessage: `Error in adding the product to the cart ${error}`
-        })
+        });
     }
 };
 
