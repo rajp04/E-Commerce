@@ -18,10 +18,12 @@ function View() {
 
     const { id } = useParams()
     const [data, setData] = useState()
-    // const [cart, setCart] = useState()
 
     const userId = localStorage.getItem("id");
     const productId = id;
+
+    const userIdForSave = localStorage.getItem("id");
+    const productIdForSave = id;
 
     const handleClick = async () => {
         const data = { userId, productId };
@@ -51,19 +53,22 @@ function View() {
         getProductInfo();
     }, []);
 
-    // useEffect(() => {
-    //     const getCartItem = async () => {
-    //         try {
-    //             const response = await axios.get(`http://localhost:5555/api/v1/cart/getcart/${userId}`);
-    //             setCart(response.data.result);
-    //         } catch (error) {
-    //             console.error('Error fetching data:', error);
-    //         }
-    //     }
-    //     getCartItem()
-    // }, [])
+    const handleSave = async () => {
+        const data = { userIdForSave, productIdForSave };
+        // console.log(userIdForSave, productIdForSave);
+        try {
+            const result = await axios.post("http://localhost:5555/api/v1/cart/addsave", data);
 
-    // console.log(cart);
+            if (result.success === 1) {
+                console.log(result);
+                console.log("Successfully added to save for later");
+            } else {
+                console.log("Request was not successful");
+            }
+        } catch (error) {
+            console.error("Error making the request:", error.message);
+        }
+    }
 
     return (
         <>
@@ -86,8 +91,8 @@ function View() {
                                         {data.stock > 0 ? (
                                             <img src={data.image} alt="" className='h-80 p-5' />
                                         ) : (
-                                            <div style={{ backgroundImage: `url(${data.image})` }} className='h-80 p-5 bg-no-repeat flex items-center justify-center bg-cover bg-center'>
-                                                <p>Out of Stock</p>
+                                            <div style={{ backgroundImage: `url(${data.image})`, filter: 'blur(1px)' }} className='h-80 w-80 p-5 bg-no-repeat bg-cover bg-center flex items-center justify-center'>
+                                                <p className='font-bold text-5xl whitespace-nowrap'>Out of Stock</p>
                                             </div>
                                         )}
                                     </div>
@@ -191,10 +196,12 @@ function View() {
                                     </div>
                                 </div>
 
-                                <div className='flex justify-center items-center py-10'>
-                                    {/* <FaRegHeart className='text-2xl text-blue-500 me-3' /> */}
-                                    <FaHeart className='text-2xl text-blue-500 me-3' onClick={() => handleClick()} />
-                                    <h1 className='text-blue-500 text-2xl'>My Cart</h1>
+                                <div className='flex flex-col justify-center items-center pt-5'>
+                                    <button className='text-2xl text-white py-2 px-5 me-3 bg-blue-500 rounded-md' onClick={() => handleClick()} >Add to Cart</button>
+                                    <div className='flex items-center pt-5'>
+                                        <FaHeart className='text-2xl text-blue-500 me-3' onClick={() => handleSave()} />
+                                        <h1 className='text-blue-500 text-2xl'>Save for later</h1>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -59,7 +59,7 @@ module.exports.addToCart = async (req, res) => {
                     message: "Product already in cart",
                 });
             }
-            
+
             const result = await Cart.create({ userId, productId });
             return res.json({
                 success: 1,
@@ -131,3 +131,63 @@ module.exports.removeAllItem = async (req, res) => {
     }
 
 }
+
+
+// save for later controller
+module.exports.saveForLater = async (req, res) => {
+    const { userIdForSave, productIdForSave } = req.body;
+    try {
+        if (!userIdForSave || !productIdForSave) {
+            return res.json({
+                success: 0,
+                message: "User ID and Product ID not Found",
+            });
+        }
+
+        const existSave = await Cart.findOne({ userIdForSave, productIdForSave });
+        if (existSave) {
+            return res.json({
+                success: 0,
+                message: "already exists",
+            });
+        }
+
+        const result = await Cart.create({ userIdForSave, productIdForSave });
+        return res.json({
+            success: 1,
+            message: "Successfully added to save for later",
+            result
+        });
+    } catch (error) {
+        return res.json({
+            success: 0,
+            errorMessage: `Error in adding the product to the cart ${error}`
+        });
+    }
+}
+
+// get save for later data controller
+module.exports.getItemSave = async (req, res) => {
+    try {
+        const id = req.params.id
+        // Retrieve all products from the database using the Product model
+        const result = await Cart.find({ userIdForSave: id });
+
+        // Respond with a success message and the retrieved products
+        res.status(200).json({
+            success: 1,
+            result
+        });
+
+    } catch (error) {
+        // Handle any errors that occur during the process
+        console.error(error);
+
+        // Respond with an error message and status 400
+        res.status(400).json({
+            success: 0,
+            message: 'Error in fetching products'
+        });
+    }
+
+};

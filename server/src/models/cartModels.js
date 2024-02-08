@@ -7,7 +7,13 @@ const cartSchema = new mongoose.Schema(
         },
         productId: {
             type: String
-        }
+        },
+        userIdForSave:{
+            type: String
+        },
+        productIdForSave:{
+            type: String
+        },
     },
     { timestamps: true }
 )

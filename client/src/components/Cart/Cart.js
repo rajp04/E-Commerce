@@ -12,6 +12,8 @@ function Cart() {
     const [cart, setCart] = useState()
     const [product, setProduct] = useState()
     const [data, setData] = useState()
+    const [save, setSave] = useState()
+    const [saveData, setSaveData] = useState()
     const [referesh, setReferesh] = useState()
     const naviget = useNavigate()
     const userid = localStorage.getItem("id")
@@ -21,6 +23,19 @@ function Cart() {
             try {
                 const result = await axios.get(`http://localhost:5555/api/v1/cart/getcart/${userid}`);
                 setCart(result.data.result);
+            } catch (error) {
+                console.error("Error fetching cart data:", error);
+            }
+        };
+        getCart();
+    }, [userid, referesh]);
+
+
+    useEffect(() => {
+        const getCart = async () => {
+            try {
+                const result = await axios.get(`http://localhost:5555/api/v1/cart/getsave/${userid}`);
+                setSave(result.data.result);
             } catch (error) {
                 console.error("Error fetching cart data:", error);
             }
@@ -57,16 +72,29 @@ function Cart() {
     }, [cart, product]);
 
 
+    useEffect(() => {
+        if (save && product) {
+            const obj = [];
+            for (let x = 0; x < save.length; x++) {
+                product.forEach((pId) => {
+                    if (pId._id === save[x].productIdForSave) {
+                        obj.push(pId);
+                    }
+                });
+            }
+            setSaveData(obj);
+        }
+    }, [save, product]);
+
+
     const handleDelete = async () => {
         try {
             const ids = cart.map((item) => item._id);
             for (const id of ids) {
-                const response = await axios.delete(`http://localhost:5555/api/v1/cart/deletecart/${id}`);
-                if (response.status === 200 || response.status === 204) {
-                    setReferesh(Math.random());
-                    break; // Stop the loop after deleting the first item
-                }
+                await axios.delete(`http://localhost:5555/api/v1/cart/deletecart/${id}`);
+                break;
             }
+            setReferesh(Math.random());
         } catch (error) {
             console.error("Error deleting item(s) from the cart:", error);
         }
@@ -89,8 +117,8 @@ function Cart() {
         <>
             <Header />
             <div className='xl:px-28 lg:px-16 md:px-6 sm:px-2 bg-gray-100 py-5'>
-                {data && 
-                <h1 className='font-bold text-2xl pb-5'>My Cart ({data.length})</h1>
+                {data &&
+                    <h1 className='font-bold text-2xl pb-5'>My Cart ({data.length})</h1>
                 }
                 <div className='grid grid-cols-12 gap-5' >
                     <div className='border-2 lg:col-span-9 sm:col-span-8 col-span-12 border-gray-300 bg-white rounded-md p-5'>
@@ -211,46 +239,18 @@ function Cart() {
                 <div className='border-2 border-gray-300 bg-white rounded-md lg:p-5 p-2'>
                     <h1 className='font-bold text-xl'>Saved for later</h1>
                     <div className='mt-5 grid grid-cols-12 lg:gap-5 gap-2'>
-                        <div className='sm:col-span-3 col-span-6'>
-                            <div className='border-2 border-gray-300 flex justify-center items-center mb-2 lg:p-5 p-2 rounded-md'>
-                                <img src={require('../Cart/image/image 32.png')} alt="" className='h-44' />
+                        {saveData && saveData.map(item => (
+                            <div className='sm:col-span-3 col-span-6'>
+                                <div className='border-2 border-gray-300 flex justify-center items-center mb-2 lg:p-5 p-2 rounded-md'>
+                                    <img src={item.image} alt="" className='h-44' />
+                                </div>
+                                <h1 className='text-2xl font-bold'>&#8377; {item.price}</h1>
+                                <p className='mt-1 text-gray-500 overflow-hidden whitespace-nowrap text-ellipsis'>{item.description}</p>
+                                <button className='flex items-center mt-2 justify-center text-blue-500 py-1 px-2 border-2 border-gray-300 rounded-md text-xl'>
+                                    <MdOutlineShoppingCart className='lg:me-3 me-1' />Move to cart
+                                </button>
                             </div>
-                            <h1 className='text-2xl font-bold'>$99.50</h1>
-                            <p className='mt-1 text-gray-500'>GoPro HERO6 4K Action Camera - Black</p>
-                            <button className='flex items-center mt-2 justify-center text-blue-500 py-1 px-2 border-2 border-gray-300 rounded-md text-xl'>
-                                <MdOutlineShoppingCart className='lg:me-3 me-1 ' />Move to cart
-                            </button>
-                        </div>
-                        <div className='sm:col-span-3 col-span-6'>
-                            <div className='border-2 border-gray-300 flex justify-center items-center mb-2 lg:p-5 p-2 rounded-md'>
-                                <img src={require('../Cart/image/image 22.png')} alt="" className='h-44' />
-                            </div>
-                            <h1 className='text-2xl font-bold'>$99.50</h1>
-                            <p className='mt-1 text-gray-500'>GoPro HERO6 4K Action Camera - Black</p>
-                            <button className='flex items-center mt-2 justify-center text-blue-500 py-1 px-2 border-2 border-gray-300 rounded-md text-xl'>
-                                <MdOutlineShoppingCart className='lg:me-3 me-1 ' />Move to cart
-                            </button>
-                        </div>
-                        <div className='sm:col-span-3 col-span-6'>
-                            <div className='border-2 border-gray-300 flex justify-center items-center mb-2 lg:p-5 p-2 rounded-md'>
-                                <img src={require('../Cart/image/image 34.png')} alt="" className='h-44' />
-                            </div>
-                            <h1 className='text-2xl font-bold'>$99.50</h1>
-                            <p className='mt-1 text-gray-500'>GoPro HERO6 4K Action Camera - Black</p>
-                            <button className='flex items-center mt-2 justify-center text-blue-500 py-1 px-2 border-2 border-gray-300 rounded-md text-xl'>
-                                <MdOutlineShoppingCart className='lg:me-3 me-1 ' />Move to cart
-                            </button>
-                        </div>
-                        <div className='sm:col-span-3 col-span-6'>
-                            <div className='border-2 border-gray-300 flex justify-center items-center mb-2 lg:p-5 p-2 rounded-md'>
-                                <img src={require('../Cart/image/image 35.png')} alt="" className='h-44' />
-                            </div>
-                            <h1 className='text-2xl font-bold'>$99.50</h1>
-                            <p className='mt-1 text-gray-500'>GoPro HERO6 4K Action Camera - Black</p>
-                            <button className='flex items-center mt-2 justify-center text-blue-500 py-1 px-2 border-2 border-gray-300 rounded-md text-xl'>
-                                <MdOutlineShoppingCart className='lg:me-3 me-1' />Move to cart
-                            </button>
-                        </div>
+                        ))}
                     </div>
                 </div>
 

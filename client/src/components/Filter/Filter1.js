@@ -1,7 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
 import React, { useEffect } from 'react'
 import { BsDot } from 'react-icons/bs'
-import { FaRegHeart } from 'react-icons/fa'
 import { IoStar, IoStarOutline } from 'react-icons/io5'
 import { MdKeyboardArrowUp } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
@@ -119,9 +118,7 @@ function Filter1() {
                                 <p className='text-gray-500 pe-20'>{item.description}</p>
                                 <h1 className='text-blue-500'>View details</h1>
                             </div>
-                            <div className='border-2 border-gray-300 p-2 absolute rounded-md bg-white right-0 top-0'>
-                                <FaRegHeart className='text-blue-500 text-xl' onClick={() => handleClick(item._id)} />
-                            </div>
+                            <button className='text-white py-1 px-3 bg-blue-500 rounded-md' onClick={() => handleClick(item._id)} >Add to Cart</button>
                         </div>
                     </div>
                 </div >
