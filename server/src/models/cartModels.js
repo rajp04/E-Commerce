@@ -13,8 +13,13 @@ const cartSchema = new mongoose.Schema(
             type: String
         },
         productIdForSave: {
-            type: String
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Product"
         },
+        qty: {
+            type: Number,
+            default: 1
+        }
     },
     { timestamps: true }
 )

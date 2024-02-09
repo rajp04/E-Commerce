@@ -81,15 +81,13 @@ module.exports.addToCart = async (req, res) => {
 };
 
 
-// remove item from Id cart
+// remove item from cart ById
 module.exports.removeItemCart = async (req, res) => {
     try {
         const id = req.params.id;
 
         // Find the item in the cart and delete it
         const deletedItem = await Cart.findByIdAndDelete(id);
-
-        console.log(deletedItem)
 
         // If the item is successfully removed, send a success response
         res.json({
@@ -164,7 +162,7 @@ module.exports.getItemSave = async (req, res) => {
     try {
         const id = req.params.id
         // Retrieve all products from the database using the Product model
-        const result = await Cart.find({ userIdForSave: id });
+        const result = await Cart.find({ userIdForSave: id }).populate("productIdForSave").select("-createdAt -updatedAt -__v")
 
         // Respond with a success message and the retrieved products
         res.status(200).json({
@@ -215,3 +213,35 @@ module.exports.removeItemSave = async (req, res) => {
         });
     }
 }
+
+
+// Update quantity of cart item
+module.exports.updateQTY = async (req, res) => {
+    try {
+        const productId = req.params.productId;
+
+        // Find the cart item by productId and update its quantity
+        const updateQTY = await Cart.updateOne(
+            { productId: productId },
+            { qty: req.body.qty },
+            { new: true }
+        );
+
+        if (!updateQTY) {
+            return res.status(404).json({
+                success: 0,
+                message: "Cart item not found"
+            });
+        }
+
+        // Respond with success message and the updated cart item details
+        res.json({
+            success: 1,
+            message: "Quantity updated successfully",
+            updateQTY
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: 0, message: "Internal Server Error" });
+    }
+};

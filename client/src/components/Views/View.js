@@ -18,6 +18,7 @@ function View() {
 
     const { id } = useParams()
     const [data, setData] = useState()
+    const [refresh, setRefresh] = useState()
 
     const userId = localStorage.getItem("id");
     const productId = id;
@@ -30,12 +31,8 @@ function View() {
         // console.log(userId, productId);
         try {
             const result = await axios.post("http://localhost:5555/api/v1/cart/addcart", data);
-
-            if (result.success === 1) {
-                console.log("Successfully added to cart");
-            } else {
-                console.log("Request was not successful");
-            }
+            setRefresh(Math.random())
+            console.log(result);
         } catch (error) {
             console.error("Error making the request:", error.message);
         }
@@ -51,20 +48,14 @@ function View() {
             }
         };
         getProductInfo();
-    }, []);
+    }, [refresh]);
 
     const handleSave = async () => {
         const data = { userIdForSave, productIdForSave };
         // console.log(userIdForSave, productIdForSave);
         try {
             const result = await axios.post("http://localhost:5555/api/v1/cart/addsave", data);
-
-            if (result.success === 1) {
-                console.log(result);
-                console.log("Successfully added to save for later");
-            } else {
-                console.log("Request was not successful");
-            }
+            console.log(result);
         } catch (error) {
             console.error("Error making the request:", error.message);
         }
@@ -91,7 +82,7 @@ function View() {
                                         {data.stock > 0 ? (
                                             <img src={data.image} alt="" className='h-80 p-5' />
                                         ) : (
-                                            <div style={{ backgroundImage: `url(${data.image})`, filter: 'blur(1px)' }} className='h-80 w-80 p-5 bg-no-repeat bg-cover bg-center flex items-center justify-center'>
+                                            <div style={{ backgroundImage: `url(${data.image})`, filter: 'blur(1px)' }} className='h-80 bg-no-repeat bg-cover bg-center flex items-center justify-center'>
                                                 <p className='font-bold text-5xl whitespace-nowrap'>Out of Stock</p>
                                             </div>
                                         )}

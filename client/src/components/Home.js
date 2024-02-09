@@ -36,7 +36,7 @@ function Home() {
   return (
     <>
       <Header />
-      <div className="xl:px-28 lg:px-16 md:px-6 sm:px-2 bg-gray-100 py-5">
+      <div className="xl:px-28 lg:px-16 md:px-6 sm:px-2 bg-gray-100 py-5" onClick={()=> navigate("/filter")}>
         {/* only for hiiden */}
         <div
           className="xl:col-span-7 col-span-6 p-10 bg-no-repeat bg-cover bg-center block md:hidden"

@@ -1,5 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BsDot } from 'react-icons/bs'
 import { IoStar, IoStarOutline } from 'react-icons/io5'
 import { MdKeyboardArrowUp } from 'react-icons/md'
@@ -14,6 +14,7 @@ function Filter1() {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const [refresh , setRefresh] = useState()
     const productData = useSelector((state) => state.product.productData);
     const loading = useSelector((state) => state.product.loading);
     const error = useSelector((state) => state.product.error);
@@ -29,24 +30,10 @@ function Filter1() {
                 console.error("Error fetching product data:", error);
             }
         })();
-    }, [dispatch]);
+    }, [dispatch, refresh]);
 
     if (loading) {
         return <div className='flex items-center justify-center'>
-            <ReactLoading type="balls" color="#0000FF"
-                height={100} width={50} />
-            <ReactLoading type="bars" color="#0000FF"
-                height={100} width={50} />
-            <ReactLoading type="bubbles" color="#0000FF"
-                height={100} width={50} />
-            <ReactLoading type="cubes" color="#0000FF"
-                height={100} width={50} />
-            <ReactLoading type="cylon" color="#0000FF"
-                height={100} width={50} />
-            <ReactLoading type="spin" color="#0000FF"
-                height={100} width={50} />
-            <ReactLoading type="spokes" color="#0000FF"
-                height={100} width={50} />
             <ReactLoading
                 type="spinningBubbles"
                 color="#0000FF"
@@ -65,12 +52,8 @@ function Filter1() {
         // console.log(userId, productId);
         try {
             const result = await axios.post("http://localhost:5555/api/v1/cart/addcart", data);
-
-            if (result.status === 200) {
-                console.log("Successfully added to cart");
-            } else {
-                console.log("Request was not successful");
-            }
+            setRefresh(Math.random())
+            console.log(result);
         } catch (error) {
             console.error("Error making the request:", error.message);
         }
