@@ -6,12 +6,13 @@ const cartSchema = new mongoose.Schema(
             type: String
         },
         productId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Product"
+        },
+        userIdForSave: {
             type: String
         },
-        userIdForSave:{
-            type: String
-        },
-        productIdForSave:{
+        productIdForSave: {
             type: String
         },
     },

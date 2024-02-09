@@ -8,7 +8,7 @@ module.exports.getItemCart = async (req, res) => {
     try {
         const id = req.params.id
         // Retrieve all products from the database using the Product model
-        const result = await Cart.find({ userId: id });
+        const result = await Cart.find({ userId: id }).populate("productId").select("-createdAt -updatedAt -__v")
 
         // Respond with a success message and the retrieved products
         res.status(200).json({
@@ -87,15 +87,9 @@ module.exports.removeItemCart = async (req, res) => {
         const id = req.params.id;
 
         // Find the item in the cart and delete it
-        const deletedItem = await Cart.deleteOne({ _id: id });
+        const deletedItem = await Cart.findByIdAndDelete(id);
 
-        if (!deletedItem) {
-            // If the item is not found, send an error response
-            return res.status(404).json({
-                success: 0,
-                errorMessage: 'Item not found in the cart.'
-            });
-        }
+        console.log(deletedItem)
 
         // If the item is successfully removed, send a success response
         res.json({
@@ -119,8 +113,7 @@ module.exports.removeAllItem = async (req, res) => {
 
         // Assuming 'userId' is the field in your Cart schema representing the user's ID
         // Delete all cart items for the user with the given ID
-        const deleteResult = await Cart.findByIdAndDelete(userId);
-        console.log(deleteResult);
+        const deleteResult = await Cart.deleteMany({ userId });
     } catch (error) {
         // If an error occurs during the process, send an error response
         console.error(error);
@@ -191,3 +184,34 @@ module.exports.getItemSave = async (req, res) => {
     }
 
 };
+
+
+// remove item from Id save for later
+module.exports.removeItemSave = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        // Find the item in the cart and delete it
+        const deletedItem = await Cart.deleteOne({ _id: id });
+
+        if (!deletedItem) {
+            // If the item is not found, send an error response
+            return res.status(404).json({
+                success: 0,
+                errorMessage: 'Item not found in the save for later.'
+            });
+        }
+
+        // If the item is successfully removed, send a success response
+        res.json({
+            success: 1,
+            message: 'Item removed from the save for later successfully.'
+        });
+    } catch (error) {
+        // If an error occurs during the process, send an error response
+        res.status(500).json({
+            success: 0,
+            errorMessage: `Error in removing the item from the save for later: ${error}`
+        });
+    }
+}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FaArrowLeft, FaTruckMoving } from "react-icons/fa6";
 import { IoMdLock } from "react-icons/io";
+import { MdDelete } from "react-icons/md";
 import axios from 'axios';
 import { MdMessage, MdOutlineShoppingCart } from "react-icons/md";
 import Header from '../Header';
@@ -8,106 +9,93 @@ import Footer from '../Footer';
 import { useNavigate } from 'react-router-dom';
 
 function Cart() {
-
     const [cart, setCart] = useState()
     const [product, setProduct] = useState()
+    const [totle, setTotle] = useState(0)
     const [data, setData] = useState()
     const [save, setSave] = useState()
     const [saveData, setSaveData] = useState()
     const [referesh, setReferesh] = useState()
     const naviget = useNavigate()
-    const userid = localStorage.getItem("id")
+    const userId = localStorage.getItem("id")
 
     useEffect(() => {
         const getCart = async () => {
             try {
-                const result = await axios.get(`http://localhost:5555/api/v1/cart/getcart/${userid}`);
+                const result = await axios.get(`http://localhost:5555/api/v1/cart/getcart/${userId}`);
                 setCart(result.data.result);
             } catch (error) {
                 console.error("Error fetching cart data:", error);
             }
         };
         getCart();
-    }, [userid, referesh]);
-
+    }, [userId]);
 
     useEffect(() => {
-        const getCart = async () => {
+        if (data) {
+            let sum = 0
+            for (const a of data) {
+                let z = a.price * 1
+                sum += z
+            }
+            setTotle(sum)
+        }
+    }, [data])
+
+    useEffect(() => {
+        const getSave = async () => {
             try {
-                const result = await axios.get(`http://localhost:5555/api/v1/cart/getsave/${userid}`);
+                const result = await axios.get(`http://localhost:5555/api/v1/cart/getsave/${userId}`);
                 setSave(result.data.result);
             } catch (error) {
                 console.error("Error fetching cart data:", error);
             }
         };
-        getCart();
-    }, [userid, referesh]);
+        getSave();
+    }, [userId, referesh]);
 
 
-    useEffect(() => {
-        const getProduct = async () => {
-            try {
-                const result = await axios.get(`http://localhost:5555/api/v1/product/product`);
-                setProduct(result.data.result);
-            } catch (error) {
-                console.error("Error fetching product data:", error);
-            }
-        };
-        getProduct();
-    }, []);
-
-
-    useEffect(() => {
-        if (cart && product) {
-            const obj = [];
-            for (let x = 0; x < cart.length; x++) {
-                product.forEach((pId) => {
-                    if (pId._id === cart[x].productId) {
-                        obj.push(pId);
-                    }
-                });
-            }
-            setData(obj);
-        }
-    }, [cart, product]);
-
-
-    useEffect(() => {
-        if (save && product) {
-            const obj = [];
-            for (let x = 0; x < save.length; x++) {
-                product.forEach((pId) => {
-                    if (pId._id === save[x].productIdForSave) {
-                        obj.push(pId);
-                    }
-                });
-            }
-            setSaveData(obj);
-        }
-    }, [save, product]);
-
-
-    const handleDelete = async () => {
-        try {
-            const ids = cart.map((item) => item._id);
-            for (const id of ids) {
-                await axios.delete(`http://localhost:5555/api/v1/cart/deletecart/${id}`);
-                break;
-            }
-            setReferesh(Math.random());
-        } catch (error) {
-            console.error("Error deleting item(s) from the cart:", error);
-        }
+    const handleDelete = async (id) => {
+        console.log(id)
+        await axios.delete(`http://localhost:5555/api/v1/cart/deletecart/${id}`)
+            .then(res => console.log(res))
+            .catch(err => console.log(err))
     }
 
 
-    const handleAllDelete = async () => {
+    const handleAllDelete = async (userId) => {
+        console.log(userId)
+        await axios.delete(`http://localhost:5555/api/v1/cart/deleteallitem/${userId}`)
+            .then(res => console.log(res))
+            .catch(err => console.log(err))
+    }
+
+
+    const handleCart = async (productId) => {
+        const data = { userId, productId };
+
         try {
-            const response = await axios.delete(`http://localhost:5555/api/v1/cart/deleteallitem/${userid}`);
-            if (response.status === 200 || response.status === 204) {
-                setReferesh(Math.random())
-                console.log("Delete Successfully");
+            const result = await axios.post("http://localhost:5555/api/v1/cart/addcart", data);
+
+            if (result.success === 1) {
+                console.log("Successfully added to cart");
+            } else {
+                console.log("Request was not successful");
+                setReferesh(Math.random());
             }
+        } catch (error) {
+            console.error("Error making the request:", error.message);
+        }
+    };
+
+    const handleSaveDelete = async () => {
+        try {
+            const ids = save.map((item) => item._id);
+            for (const id of ids) {
+                await axios.delete(`http://localhost:5555/api/v1/cart/deletesave/${id}`);
+                break;
+            }
+            setReferesh(Math.random());
         } catch (error) {
             console.error("Error deleting item(s) from the cart:", error);
         }
@@ -122,52 +110,54 @@ function Cart() {
                 }
                 <div className='grid grid-cols-12 gap-5' >
                     <div className='border-2 lg:col-span-9 sm:col-span-8 col-span-12 border-gray-300 bg-white rounded-md p-5'>
-                        {data && data.map(item => (
-                            <>
-                                <div className='justify-between sm:flex mb-5 pt-2' key={item._id}>
-                                    <div className='sm:flex justify-center items-center'>
-                                        <div className='border-2 border-gray-300 p-1 rounded-md flex items-center justify-center w-fit'>
-                                            <img src={item.image} alt="" className='w-40 h-40' />
+                        {cart && cart.map((e) => {
+                            const item = e.productId
+                            return (
+                                <>
+                                    <div className='justify-between sm:flex mb-5 pt-2' key={item._id}>
+                                        <div className='sm:flex justify-center items-center'>
+                                            <div className='border-2 border-gray-300 p-1 rounded-md flex items-center justify-center w-fit'>
+                                                <img src={item.image} alt="" className='w-40 h-40' />
+                                            </div>
+                                            <div className='ms-3'>
+                                                <h1 className='font-semibold text-xl mb-1'>{item.productName}</h1>
+                                                <p className='text-gray-500'>Size: Medium, Color: Blue, Material: Plastic</p>
+                                                <p className='text-gray-500 mb-2'>Seller: Artel Market</p>
+                                                <div className='flex'>
+                                                    <button className='text-red-500 font-medium border-2 py-1 px-2 rounded-md' onClick={() => handleDelete(e._id)}>Remove</button>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className='ms-3'>
-                                            <h1 className='font-semibold text-xl mb-1'>{item.productName}</h1>
-                                            <p className='text-gray-500'>Size: Medium, Color: Blue, Material: Plastic</p>
-                                            <p className='text-gray-500 mb-2'>Seller: Artel Market</p>
-                                            <div className='flex'>
-                                                <button className='text-red-500 font-medium border-2 py-1 px-2 rounded-md' onClick={() => handleDelete()}>Remove</button>
+                                        <div>
+                                            <div className='flex items-center mt-3'>
+                                                <h1 className='font-semibold text-xl mb-3 text-end'>Price: </h1>
+                                                <h1 className='font-semibold text-xl mb-3 text-end'> {item.price}</h1>
+                                            </div>
+                                            <div className='flex flex-wrap items-center'>
+                                                <h1 className='font-bold text-2xl pe-2'>Qty:</h1>
+                                                <select className='border-2 rounded-md border-gray-100 p-1 font-bold text-xl outline-none'>
+                                                    <option >1</option>
+                                                    <option >2</option>
+                                                    <option >3</option>
+                                                    <option >4</option>
+                                                    <option >5</option>
+                                                    <option >6</option>
+                                                    <option >7</option>
+                                                    <option >8</option>
+                                                    <option >9</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
-                                    <div>
-                                        <div className='flex items-center mt-3'>
-                                            <h1 className='font-semibold text-xl mb-3 text-end'>Price: </h1>
-                                            <h1 className='font-semibold text-xl mb-3 text-end'> {item.price}</h1>
-                                        </div>
-                                        <div className='flex flex-wrap items-center'>
-                                            <h1 className='font-bold text-2xl pe-2'>Qty:</h1>
-                                            <select className='border-2 rounded-md border-gray-100 p-1 font-bold text-xl outline-none'>
-                                                <option >1</option>
-                                                <option >2</option>
-                                                <option >3</option>
-                                                <option >4</option>
-                                                <option >5</option>
-                                                <option >6</option>
-                                                <option >7</option>
-                                                <option >8</option>
-                                                <option >9</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr />
-                            </>
-                        ))}
+                                    <hr />
+                                </>)
+                        })}
                         <div className='flex justify-between items-center mt-5'>
                             <button className='flex justify-center items-center space-x-3 bg-blue-500 text-white py-1 px-3 rounded-md'>
                                 <FaArrowLeft />
                                 <h1 className='text-xl' onClick={() => naviget("/filter")}>Back to shop</h1>
                             </button>
-                            <button className='border-2 border-gray-300 text-blue-500 py-1 px-3 rounded-md text-xl' onClick={() => handleAllDelete()}>
+                            <button className='border-2 border-gray-300 text-blue-500 py-1 px-3 rounded-md text-xl' onClick={() => handleAllDelete(cart[0].userId)}>
                                 Remove All
                             </button>
                         </div>
@@ -183,7 +173,7 @@ function Cart() {
                         <div className='border-2 border-gray-300 bg-white rounded-md p-5'>
                             <div className='flex justify-between pb-1'>
                                 <h1>Subtotal:</h1>
-                                <h1>$1403.97</h1>
+                                <h1>${totle}</h1>
                             </div>
                             <div className='flex justify-between pb-1'>
                                 <h1>Discount:</h1>
@@ -246,9 +236,14 @@ function Cart() {
                                 </div>
                                 <h1 className='text-2xl font-bold'>&#8377; {item.price}</h1>
                                 <p className='mt-1 text-gray-500 overflow-hidden whitespace-nowrap text-ellipsis'>{item.description}</p>
-                                <button className='flex items-center mt-2 justify-center text-blue-500 py-1 px-2 border-2 border-gray-300 rounded-md text-xl'>
-                                    <MdOutlineShoppingCart className='lg:me-3 me-1' />Move to cart
-                                </button>
+                                <div className='flex items-center justify-between'>
+                                    <button className='flex items-center mt-2 justify-center text-blue-500 py-1 px-2 border-2 border-gray-300 rounded-md text-xl' onClick={() => handleCart(item._id)}>
+                                        <MdOutlineShoppingCart className='lg:me-3 me-1' />Move to cart
+                                    </button>
+                                    <button className='flex items-center mt-2 justify-center text-blue-500 py-1 px-2 border-2 border-gray-300 rounded-md text-xl' onClick={() => handleSaveDelete()}>
+                                        <MdDelete className='text-3xl' />
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -267,7 +262,7 @@ function Cart() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
             <Footer />
         </>
 

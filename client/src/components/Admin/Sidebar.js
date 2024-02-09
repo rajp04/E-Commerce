@@ -4,6 +4,7 @@ import { IoHome } from "react-icons/io5";
 import { HiUsers } from "react-icons/hi";
 import { FaShoppingCart, FaClipboardList } from "react-icons/fa";
 import { TbShoppingCartPlus } from "react-icons/tb";
+import { BiSolidMessageDetail } from "react-icons/bi";
 import { MdWorkHistory } from "react-icons/md";
 import { RiLogoutBoxFill } from "react-icons/ri";
 import { useNavigate } from 'react-router-dom';
@@ -38,6 +39,9 @@ function Sidebar() {
                 </div>
                 <div className='flex items-center space-x-4 text-2xl pb-2 cursor-pointer' onClick={() => navigate("/admin/orderhistory")}>
                     <MdWorkHistory className='hover:bg-blue-500 rounded-md p-1 text-3xl' /><h1>Order History</h1>
+                </div>
+                <div className='flex items-center space-x-4 text-2xl pb-2 cursor-pointer' onClick={() => navigate("/admin/message")}>
+                    <BiSolidMessageDetail className='hover:bg-blue-500 rounded-md p-1 text-3xl' /><h1>Message</h1>
                 </div>
                 <div className='flex items-center space-x-4 text-2xl pb-2 cursor-pointer'>
                     <RiLogoutBoxFill className='hover:bg-blue-500 rounded-md p-1 text-3xl' /><h1 onClick={() => {
