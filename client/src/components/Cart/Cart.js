@@ -13,7 +13,7 @@ function Cart() {
     const [cart, setCart] = useState()
     const [totle, setTotle] = useState(0)
     const [save, setSave] = useState()
-    const [qty, setQTY] = useState()
+    // const [qty, setQTY] = useState()
     const [referesh, setReferesh] = useState()
     const naviget = useNavigate()
     const userId = localStorage.getItem("id")
@@ -97,28 +97,12 @@ function Cart() {
         }
     };
 
-    // useEffect(() => {
-    const handleQTY = async () => {
-        try {
-            const data = { qty };
-            const ids = cart.map((item) => item._id);
-            console.log(ids);
-            const res = await axios.patch(`http://localhost:5555/api/v1/cart/updateqty/${ids}`, data);
-            // setReferesh(Math.random())
-            console.log(res);
-        } catch (error) {
-            console.error('Error updating quantity:', error);
-        }
-    }
-    //     handleQTY()
-    // }, []);
-
 
     useEffect(() => {
         if (cart) {
             let sum = 0
             for (const a of cart) {
-                let z = a.price * 1
+                let z = a.price * 4
                 sum += z
             }
             setTotle(sum)
@@ -134,32 +118,32 @@ function Cart() {
                 }
                 <div className='grid grid-cols-12 gap-5' >
                     <div className='border-2 lg:col-span-9 sm:col-span-8 col-span-12 border-gray-300 bg-white rounded-md p-5'>
-                        {cart && cart.map((e) => {
+                        {cart && cart.map((item) => {
                             // const item = e
                             return (
                                 <>
-                                    <div className='justify-between sm:flex mb-5 pt-2' key={e.productId._id}>
+                                    <div className='justify-between sm:flex mb-5 pt-2' key={item.productId._id}>
                                         <div className='sm:flex justify-center items-center'>
                                             <div className='border-2 border-gray-300 p-1 rounded-md flex items-center justify-center w-fit'>
-                                                <img src={e.productId.image} alt="" className='w-40 h-40' />
+                                                <img src={item.productId.image} alt="" className='w-40 h-40' />
                                             </div>
                                             <div className='ms-3'>
-                                                <h1 className='font-semibold text-xl mb-1'>{e.productId.productName}</h1>
+                                                <h1 className='font-semibold text-xl mb-1'>{item.productId.productName}</h1>
                                                 <p className='text-gray-500'>Size: Medium, Color: Blue, Material: Plastic</p>
                                                 <p className='text-gray-500 mb-2'>Seller: Artel Market</p>
                                                 <div className='flex'>
-                                                    <button className='text-red-500 font-medium border-2 py-1 px-2 rounded-md' onClick={() => handleDelete(e.productId._id)}>Remove</button>
+                                                    <button className='text-red-500 font-medium border-2 py-1 px-2 rounded-md' onClick={() => handleDelete(item.productId._id)}>Remove</button>
                                                 </div>
                                             </div>
                                         </div>
                                         <div>
                                             <div className='flex items-center mt-3'>
                                                 <h1 className='font-semibold text-xl mb-3 text-end'>Price: </h1>
-                                                <h1 className='font-semibold text-xl mb-3 text-end'> {e.productId.price}</h1>
+                                                <h1 className='font-semibold text-xl mb-3 text-end'> {item.productId.price}</h1>
                                             </div>
-                                            <div className='flex flex-wrap items-center' onClick={() => handleQTY()}>
+                                            <div className='flex flex-wrap items-center'>
                                                 <h1 className='font-bold text-2xl pe-2'>Qty:</h1>
-                                                <select className='border-2 rounded-md border-gray-100 p-1 font-bold text-xl outline-none' value={e.qty} onChange={e => setQTY(e.target.value)}>
+                                                <select className='border-2 rounded-md border-gray-100 p-1 font-bold text-xl outline-none' value={item.qty}>
                                                     <option >1</option>
                                                     <option >2</option>
                                                     <option >3</option>
