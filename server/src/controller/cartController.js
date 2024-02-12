@@ -218,11 +218,10 @@ module.exports.removeItemSave = async (req, res) => {
 // Update quantity of cart item
 module.exports.updateQTY = async (req, res) => {
     try {
-        const productId = req.params.productId;
+        const id = req.params.id;
 
-        // Find the cart item by productId and update its quantity
-        const updateQTY = await Cart.updateOne(
-            { productId: productId },
+        // Find the cart item by its ID and update its quantity
+        const updateQTY = await Cart.findByIdAndUpdate(id,
             { qty: req.body.qty },
             { new: true }
         );

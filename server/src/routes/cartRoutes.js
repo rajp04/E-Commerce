@@ -9,6 +9,6 @@ router.route("/getsave/:id").get(cartController.getItemSave);
 router.route("/deletecart/:id").delete(cartController.removeItemCart);
 router.route("/deletesave/:id").delete(cartController.removeItemSave);
 router.route("/deleteallitem/:id").delete(cartController.removeAllItem);
-router.route("/updateqty/:productId").patch(cartController.updateQTY);
+router.route("/updateqty/:id").patch(cartController.updateQTY);
 
 module.exports = router;

@@ -11,9 +11,10 @@ import { useNavigate } from 'react-router-dom';
 
 function Cart() {
     const [cart, setCart] = useState()
-    const [totle, setTotle] = useState(0)
+    const [subTotal, setSubTotal] = useState(0)
+    const [total, setTotal] = useState(0)
     const [save, setSave] = useState()
-    // const [qty, setQTY] = useState()
+    const [q, setQ] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9])
     const [referesh, setReferesh] = useState()
     const naviget = useNavigate()
     const userId = localStorage.getItem("id")
@@ -98,16 +99,38 @@ function Cart() {
     };
 
 
+    // Update the qty
+    const updateQty = async (id, newQty) => {
+        try {
+            const data = { qty: newQty };
+            const response = await axios.patch(`http://localhost:5555/api/v1/cart/updateqty/${id}`, data);
+            console.log(response);
+            setQ(response.data)
+        } catch (error) {
+            console.error('Error updating quantity:', error);
+        }
+    };
+
+
+    // total price of the cart
     useEffect(() => {
         if (cart) {
             let sum = 0
             for (const a of cart) {
-                let z = a.price * 4
+                let z = a.productId.price * a.qty
                 sum += z
             }
-            setTotle(sum)
+            setSubTotal(sum)
         }
     }, [cart])
+
+
+    useEffect(() => {
+        const calculateTotal = subTotal - 60 + 30
+        setTotal(calculateTotal)
+    })
+
+
 
     return (
         <>
@@ -119,7 +142,6 @@ function Cart() {
                 <div className='grid grid-cols-12 gap-5' >
                     <div className='border-2 lg:col-span-9 sm:col-span-8 col-span-12 border-gray-300 bg-white rounded-md p-5'>
                         {cart && cart.map((item) => {
-                            // const item = e
                             return (
                                 <>
                                     <div className='justify-between sm:flex mb-5 pt-2' key={item.productId._id}>
@@ -143,16 +165,10 @@ function Cart() {
                                             </div>
                                             <div className='flex flex-wrap items-center'>
                                                 <h1 className='font-bold text-2xl pe-2'>Qty:</h1>
-                                                <select className='border-2 rounded-md border-gray-100 p-1 font-bold text-xl outline-none' value={item.qty}>
-                                                    <option >1</option>
-                                                    <option >2</option>
-                                                    <option >3</option>
-                                                    <option >4</option>
-                                                    <option >5</option>
-                                                    <option >6</option>
-                                                    <option >7</option>
-                                                    <option >8</option>
-                                                    <option >9</option>
+                                                <select onChange={(e) => updateQty(item._id, e.target.value)} className='border-2 rounded-md border-gray-100 p-1 font-bold text-xl outline-none'>
+                                                    {q.map((e, i) => (
+                                                        <option key={i} value={e}>{e}</option>
+                                                    ))}
                                                 </select>
                                             </div>
                                         </div>
@@ -181,20 +197,20 @@ function Cart() {
                         <div className='border-2 border-gray-300 bg-white rounded-md p-5'>
                             <div className='flex justify-between pb-1'>
                                 <h1>Subtotal:</h1>
-                                <h1>${totle}</h1>
+                                <h1>&#8377; {subTotal}</h1>
                             </div>
                             <div className='flex justify-between pb-1'>
                                 <h1>Discount:</h1>
-                                <h1 className='text-red-500'>- $60.00</h1>
+                                <h1 className='text-red-500'>- &#8377; 60.00</h1>
                             </div>
                             <div className='flex justify-between pb-1'>
                                 <h1>Tax:</h1>
-                                <h1 className='text-green-500'>+ $14.00</h1>
+                                <h1 className='text-green-500'>+ &#8377; 30.00</h1>
                             </div>
                             <hr className='my-3' />
                             <div className='flex justify-between pb-2 font-bold text-lg'>
                                 <h1>Total:</h1>
-                                <h1>+ $1357.97</h1>
+                                <h1>+ &#8377; {total}</h1>
                             </div>
                             <div className='flex items-center text-white justify-center bg-green-600 rounded-md py-1 '>
                                 <button className='text-xl font-semibold'>Checkout</button>
