@@ -14,7 +14,7 @@ function Cart() {
     const [subTotal, setSubTotal] = useState(0)
     const [total, setTotal] = useState(0)
     const [save, setSave] = useState()
-    const [qty, setQTY] = useState()
+    const [qty, setQTY] = useState({})
     const [q, setQ] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9])
     const [referesh, setReferesh] = useState()
     const naviget = useNavigate()
@@ -102,19 +102,31 @@ function Cart() {
 
     // Update the qty
     useEffect(() => {
-        const updateQty = async (id) => {
+        const updateQty = async (id, newQty) => {
             try {
-                const data = { qty };
+                const data = { qty: newQty };
                 const response = await axios.patch(`http://localhost:5555/api/v1/cart/updateqty/${id}`, data);
+                setQTY(prevQty => ({ ...prevQty, [id]: response.data.qty }));
+                setReferesh(Math.random())
                 console.log(response);
-                setQ(response.data.qty)
             } catch (error) {
                 console.error('Error updating quantity:', error);
             }
         };
-        updateQty()
-    })
-    
+
+        if (cart) {
+            cart.forEach(item => {
+                if (item.productId && qty[item._id] !== undefined) {
+                    updateQty(item._id, qty[item._id]);
+                }
+            });
+        }
+    }, [cart, qty , referesh]);
+
+    const handleQtyChange = (itemId, newQty) => {
+        setQTY(prevQty => ({ ...prevQty, [itemId]: newQty }));
+    };
+
 
     // total price of the cart
     useEffect(() => {
@@ -169,7 +181,10 @@ function Cart() {
                                             </div>
                                             <div className='flex flex-wrap items-center'>
                                                 <h1 className='font-bold text-2xl pe-2'>Qty:</h1>
-                                                <select onChange={(e) => setQTY(item._id, e.target.value)} className='border-2 rounded-md border-gray-100 p-1 font-bold text-xl outline-none'>
+                                                <select
+                                                    value={qty[item._id] || ''}
+                                                    onChange={(e) => handleQtyChange(item._id, e.target.value)}
+                                                    className='border-2 rounded-md border-gray-100 p-1 font-bold text-xl outline-none'>
                                                     {q.map((e, i) => (
                                                         <option key={i} value={e}>{e}</option>
                                                     ))}

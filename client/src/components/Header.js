@@ -55,8 +55,8 @@ function Header() {
                                 <h1 className='text-sm'>Orders</h1>
                             </div>
                             <div className='flex-col flex items-center justify-center cursor-pointer relative' onClick={() => navigate('/cart')}>
-                                {cart && 
-                                <h1 className='absolute text-blue-700 font-bold text-xl -top-4'>{cart.length}</h1>
+                                {cart &&
+                                    <h1 className='absolute text-blue-500 font-extrabold text-lg -top-4'>{cart.length}</h1>
                                 }
                                 <FaCartShopping className='md:text-xl' />
                                 <h1 className='text-sm whitespace-nowrap'>My Cart</h1>

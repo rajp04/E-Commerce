@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import image from "../image/images.jpg";
 import axios from "axios";
+import { BiSolidHide, BiSolidShow } from "react-icons/bi";
 
 function Login() {
   const navigate = useNavigate();
   const [mobile, setMobile] = useState()
   const [password, setPassword] = useState()
+  const [visible, setVisible] = useState(false)
 
   const user = localStorage.getItem("id")
 
@@ -64,14 +66,19 @@ function Login() {
           <label htmlFor="" className="font-medium pb-1 ">
             Password
           </label>
-          <input
-            type="text"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="At least 6 characters"
-            className="rounded-md py-1 px-2 placeholder:text-gray-800 border-2 outline-none mb-2"
-          />
+          <div className="relative">
+            <input
+              type={visible ? "text" : "password"}
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="At least 6 characters"
+              className="rounded-md py-1 px-2 w-full placeholder:text-gray-800 border-2 outline-none mb-2"
+            />
+            <div onClick={() => setVisible(!visible)} className="absolute right-1 text-2xl top-2">
+              {visible ? <BiSolidShow /> : <BiSolidHide />}
+            </div>
+          </div>
           <h1 className="text-red-500 mb-2 text-end">Forget Password</h1>
           <button className="bg-blue-600 py-1 rounded-md text-white text-xl" type="submit" onClick={login}>
             Login

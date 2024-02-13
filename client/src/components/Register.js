@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import image from "../image/images.jpg";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { BiSolidHide, BiSolidShow } from "react-icons/bi";
 
 const signUpSchema = Yup.object({
   fullName: Yup.string().min(2).max(25).required("Please enter your name"),
@@ -20,6 +21,7 @@ const initialValues = {
 };
 
 function Register() {
+  const [visible, setVisible] = useState(false)
   const navigate = useNavigate();
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
@@ -33,8 +35,8 @@ function Register() {
             values
           );
 
-          if (res) {
-            console.log("User registered successfully!")
+          if (res.data.success === 1) {
+            console.log("User registered successfully!", res)
             navigate("/login");
           } else {
             console.log(res.data);
@@ -120,20 +122,28 @@ function Register() {
             {errors.mobile && touched.mobile ? (
               <p className="text-red-500 text-sm ps-1">{errors.mobile}</p>
             ) : null}
+            <div>
+
+            </div>
             <label htmlFor="password" className="font-medium pb-1 pt-1">
               Password
             </label>
-            <input
-              type="password"
-              name="password"
-              autoComplete="off"
-              id="password"
-              value={values.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              placeholder="At least 6 characters"
-              className="rounded-md py-1 px-2 placeholder:text-gray-800 border-2 outline-none"
-            />
+            <div className="relative">
+              <input
+                type={visible ? "text" : "password"}
+                name="password"
+                autoComplete="off"
+                id="password"
+                value={values.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="At least 6 characters"
+                className="rounded-md py-1 px-2 placeholder:text-gray-800 w-full border-2 outline-none"
+              />
+              <div onClick={() => setVisible(!visible)} className="absolute right-1 text-2xl top-2">
+                {visible ? <BiSolidShow /> : <BiSolidHide />}
+              </div>
+            </div>
             {errors.password && touched.password ? (
               <p className="text-red-500 text-sm ps-1">{errors.password}</p>
             ) : null}
