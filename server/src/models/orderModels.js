@@ -15,18 +15,9 @@ const orderSchema = new mongoose.Schema(
             type: Number
         },
         status: {
-            type: Number
+            type: String,
+            default: 'Pending'
         },
-        orderPrice: {
-            type: Number
-        },
-        disCount: {
-            type: Number,
-            default: 60
-        },
-        totalPrice: {
-            type: Number
-        }
     },
     { timestamps: true }
 )

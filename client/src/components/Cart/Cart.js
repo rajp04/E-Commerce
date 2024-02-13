@@ -14,6 +14,7 @@ function Cart() {
     const [subTotal, setSubTotal] = useState(0)
     const [total, setTotal] = useState(0)
     const [save, setSave] = useState()
+    const [qty, setQTY] = useState()
     const [q, setQ] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9])
     const [referesh, setReferesh] = useState()
     const naviget = useNavigate()
@@ -50,7 +51,7 @@ function Cart() {
     const handleAllDelete = async (userId) => {
 
         try {
-            const response = await axios.delete(`http://localhost:5555/api/v1/cart/deleteallitem/${userId}`);
+            const response = await axios.delete(`http://localhost:5555/api/v1/cart/deleteallitem/${userId}`)
             setReferesh(Math.random());
             console.log(response);
         } catch (error) {
@@ -100,17 +101,20 @@ function Cart() {
 
 
     // Update the qty
-    const updateQty = async (id, newQty) => {
-        try {
-            const data = { qty: newQty };
-            const response = await axios.patch(`http://localhost:5555/api/v1/cart/updateqty/${id}`, data);
-            console.log(response);
-            setQ(response.data)
-        } catch (error) {
-            console.error('Error updating quantity:', error);
-        }
-    };
-
+    useEffect(() => {
+        const updateQty = async (id) => {
+            try {
+                const data = { qty };
+                const response = await axios.patch(`http://localhost:5555/api/v1/cart/updateqty/${id}`, data);
+                console.log(response);
+                setQ(response.data.qty)
+            } catch (error) {
+                console.error('Error updating quantity:', error);
+            }
+        };
+        updateQty()
+    })
+    
 
     // total price of the cart
     useEffect(() => {
@@ -122,7 +126,7 @@ function Cart() {
             }
             setSubTotal(sum)
         }
-    }, [cart])
+    }, [cart, referesh])
 
 
     useEffect(() => {
@@ -154,7 +158,7 @@ function Cart() {
                                                 <p className='text-gray-500'>Size: Medium, Color: Blue, Material: Plastic</p>
                                                 <p className='text-gray-500 mb-2'>Seller: Artel Market</p>
                                                 <div className='flex'>
-                                                    <button className='text-red-500 font-medium border-2 py-1 px-2 rounded-md' onClick={() => handleDelete(item.productId._id)}>Remove</button>
+                                                    <button className='text-red-500 font-medium border-2 py-1 px-2 rounded-md' onClick={() => handleDelete(item._id)}>Remove</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -165,7 +169,7 @@ function Cart() {
                                             </div>
                                             <div className='flex flex-wrap items-center'>
                                                 <h1 className='font-bold text-2xl pe-2'>Qty:</h1>
-                                                <select onChange={(e) => updateQty(item._id, e.target.value)} className='border-2 rounded-md border-gray-100 p-1 font-bold text-xl outline-none'>
+                                                <select onChange={(e) => setQTY(item._id, e.target.value)} className='border-2 rounded-md border-gray-100 p-1 font-bold text-xl outline-none'>
                                                     {q.map((e, i) => (
                                                         <option key={i} value={e}>{e}</option>
                                                     ))}

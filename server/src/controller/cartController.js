@@ -84,15 +84,16 @@ module.exports.addToCart = async (req, res) => {
 // remove item from cart ById
 module.exports.removeItemCart = async (req, res) => {
     try {
-        const id = req.params.id;
+        const _id = req.params.id;
 
         // Find the item in the cart and delete it
-        const deletedItem = await Cart.findByIdAndDelete(id);
+        const deletedItem = await Cart.deleteOne({ _id });
 
         // If the item is successfully removed, send a success response
         res.json({
             success: 1,
-            message: 'Item removed from the cart successfully.'
+            message: 'Item removed from the cart successfully.',
+            deletedItem
         });
     } catch (error) {
         // If an error occurs during the process, send an error response
@@ -156,6 +157,7 @@ module.exports.saveForLater = async (req, res) => {
         });
     }
 }
+
 
 // get save for later data controller
 module.exports.getItemSave = async (req, res) => {
