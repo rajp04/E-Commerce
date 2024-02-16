@@ -6,13 +6,17 @@ const Order = orderSchema.Order;
 module.exports.order = async (req, res) => {
     try {
 
-        const { price, qty, userId } = req.body;
+        const { userId } = req.body;
 
-        const result = await Order.create({
-            userId,
-            price,
-            qty
-        })
+        const existUser = await Order.findOne({ userId });
+        if (existUser) {
+            return res.json({
+                success: 0,
+                message: "User already exists",
+            });
+        }
+
+        const result = await Order.create({ userId })
 
         res.json({
             success: 1,
@@ -26,3 +30,24 @@ module.exports.order = async (req, res) => {
         });
     }
 };
+
+
+// Get Order Data
+module.exports.getOrderData = async (req, res) => {
+    try {
+        const id = req.params.id
+        // Retrieve all products from the database using the Product model
+        const result = await Order.find({ userId: id }).populate("cartId").select("-createdAt -updatedAt -__v")
+
+        res.json({
+            success: 1,
+            message: "Get Order Successfully",
+            result
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: 0,
+            error: error.message
+        });
+    }
+}

@@ -1,18 +1,64 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from './Header.js'
 import Footer from './Footer.js'
 import { useNavigate } from 'react-router-dom'
 import { FaIndianRupeeSign } from 'react-icons/fa6'
+import axios from 'axios'
 
 function Order() {
     const navigate = useNavigate()
+    const [order, setOrder] = useState([]);
+    const [cart, setCart] = useState([]);
+    const [data, setData] = useState([]);
 
-    const user = localStorage.getItem('id')
+    const user = localStorage.getItem('id');
+
     useEffect(() => {
         if (!user) {
-            return navigate('/login')
+            return navigate('/login');
         }
-    },)
+    },);
+
+    useEffect(() => {
+        const getOrder = async () => {
+            try {
+                const result = await axios.get(`http://localhost:5555/api/v1/order/getorderdata/${user}`);
+                setOrder(result.data.result);
+            } catch (error) {
+                console.error("Error fetching order data:", error);
+            }
+        };
+        getOrder();
+    }, [user]);
+
+    useEffect(() => {
+        const getCart = async () => {
+            try {
+                const result = await axios.get(`http://localhost:5555/api/v1/cart/getcart/${user}`);
+                setCart(result.data.result);
+            } catch (error) {
+                console.error("Error fetching cart data:", error);
+            }
+        };
+        getCart();
+    }, [user]);
+
+    useEffect(() => {
+        if (order && cart) {
+            const filteredData = [];
+            order.forEach(orderItem => {
+                cart.forEach(cartItem => {
+                    if (orderItem.userId === cartItem.userId) {
+                        filteredData.push({ order: orderItem, cart: cartItem });
+                    }
+                });
+            });
+            setData(filteredData);
+        }
+    }, [order, cart]);
+
+    console.log(data, "abc");
+
     return (
         <>
             <Header />
@@ -25,18 +71,23 @@ function Order() {
                     <h1 className='col-span-2 text-xl font-medium text-center'>Units</h1>
                     <h1 className='col-span-2 text-xl font-medium text-center'>Price</h1>
                 </div>
-                <div className='grid grid-cols-10 border-2 bg-white rounded-b-md py-1'>
-                    <div className='flex justify-center items-center col-span-2'>
-                        <img src={require("../image/home.png")} alt="" />
-                    </div>
-                    <h1 className='col-span-2 flex justify-center items-center text-xl font-medium whitespace-pre-wrap'>men tshirt</h1>
-                    <h1 className='col-span-2 flex justify-center items-center text-3xl font-bold'>M</h1>
-                    <h1 className='col-span-2 flex justify-center items-center text-3xl font-bold'>5</h1>
-                    <div className='col-span-2 flex items-center justify-center text-3xl font-bold'>
-                        <FaIndianRupeeSign />
-                        <h1>120</h1>
-                    </div>
-                </div>
+                {data && data.map((item) => {
+                    const e = item.cart.productId
+                    return (
+                        <div className='grid grid-cols-10 border-2 bg-white rounded-b-md py-1'>
+                            <div className='flex justify-center items-center col-span-2'>
+                                <img src={e.image} alt="" />
+                            </div>
+                            <h1 className='col-span-2 flex justify-center items-center text-xl font-medium whitespace-pre-wrap'>{e.productName}</h1>
+                            <h1 className='col-span-2 flex justify-center items-center text-3xl font-bold'>{e.size}</h1>
+                            <h1 className='col-span-2 flex justify-center items-center text-3xl font-bold'>{item.cart.qty}</h1>
+                            <div className='col-span-2 flex items-center justify-center text-3xl font-bold'>
+                                <FaIndianRupeeSign />
+                                <h1>{e.price}</h1>
+                            </div>
+                        </div>
+                    )
+                })}
             </div>
             <Footer />
         </>

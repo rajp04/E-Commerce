@@ -15,7 +15,7 @@ function Cart() {
     const [total, setTotal] = useState(0)
     const [save, setSave] = useState()
     const [qty, setQTY] = useState({})
-    const [q, setQ] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9])
+    const [q] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9])
     const [referesh, setReferesh] = useState()
     const naviget = useNavigate()
     const userId = localStorage.getItem("id")
@@ -121,7 +121,7 @@ function Cart() {
                 }
             });
         }
-    }, [cart, qty , referesh]);
+    }, [cart, qty, referesh]);
 
     const handleQtyChange = (itemId, newQty) => {
         setQTY(prevQty => ({ ...prevQty, [itemId]: newQty }));
@@ -142,10 +142,30 @@ function Cart() {
 
 
     useEffect(() => {
-        const calculateTotal = subTotal - 60 + 30
+        const calculateTotal = subTotal - 60 + 60
         setTotal(calculateTotal)
     })
 
+
+    // Order Api
+    const handleOrder = async () => {
+        try {
+            const data = { userId }
+            const response = await axios.post(`http://localhost:5555/api/v1/order/order`, data);
+            console.log(response.data);
+            if (response.data.success === 1) {
+                // try {
+                //     const response = await axios.delete(`http://localhost:5555/api/v1/cart/deleteallitem/${userId}`)
+                //     setReferesh(Math.random());
+                //     console.log(response);
+                // } catch (error) {
+                //     console.log(error);
+                // }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
 
     return (
@@ -193,7 +213,8 @@ function Cart() {
                                         </div>
                                     </div >
                                     <hr />
-                                </>)
+                                </>
+                            )
                         })}
                         <div className='flex justify-between items-center mt-5'>
                             <button className='flex justify-center items-center space-x-3 bg-blue-500 text-white py-1 px-3 rounded-md'>
@@ -224,7 +245,7 @@ function Cart() {
                             </div>
                             <div className='flex justify-between pb-1'>
                                 <h1>Tax:</h1>
-                                <h1 className='text-green-500'>+ &#8377; 30.00</h1>
+                                <h1 className='text-green-500'>+ &#8377; 60.00</h1>
                             </div>
                             <hr className='my-3' />
                             <div className='flex justify-between pb-2 font-bold text-lg'>
@@ -232,7 +253,7 @@ function Cart() {
                                 <h1>+ &#8377; {total}</h1>
                             </div>
                             <div className='flex items-center text-white justify-center bg-green-600 rounded-md py-1 '>
-                                <button className='text-xl font-semibold'>Checkout</button>
+                                <button className='text-xl font-semibold' onClick={() => handleOrder()}>Checkout</button>
                             </div>
                         </div>
                     </div>
