@@ -8,5 +8,6 @@ router.route("/product").get(productController.product);
 router.route("/updateproduct/:id").patch(upload.upload.single("image"), productController.updateProduct);
 router.route("/deleteproduct/:id").delete(productController.deleteProduct);
 router.route("/getproduct/:id").get(productController.getProduct);
+router.route("/updateqty/:id").patch(productController.updateQTY);
 
 module.exports = router;

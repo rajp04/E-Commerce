@@ -215,34 +215,3 @@ module.exports.removeItemSave = async (req, res) => {
         });
     }
 }
-
-
-// Update quantity of cart item
-module.exports.updateQTY = async (req, res) => {
-    try {
-        const id = req.params.id;
-
-        // Find the cart item by its ID and update its quantity
-        const updateQTY = await Cart.findByIdAndUpdate(id,
-            { qty: req.body.qty },
-            { new: true }
-        );
-
-        if (!updateQTY) {
-            return res.status(404).json({
-                success: 0,
-                message: "Cart item not found"
-            });
-        }
-
-        // Respond with success message and the updated cart item details
-        res.json({
-            success: 1,
-            message: "Quantity updated successfully",
-            updateQTY
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: 0, message: "Internal Server Error" });
-    }
-};

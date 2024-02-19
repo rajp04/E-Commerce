@@ -15,10 +15,6 @@ const cartSchema = new mongoose.Schema(
         productIdForSave: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Product"
-        },
-        qty: {
-            type: Number,
-            default: 1
         }
     },
     { timestamps: true }

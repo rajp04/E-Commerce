@@ -6,10 +6,15 @@ const orderSchema = new mongoose.Schema(
             type: Array,
             required: true
         },
+        userId: {
+            type: String,
+            required: true
+        },
         status: {
             type: String,
-            default: 'Pending'
-        },
+            default: 'Pending',
+            enum: ['Pending', 'Delivery']
+        }
     },
     { timestamps: true }
 )

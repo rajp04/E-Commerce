@@ -6,14 +6,12 @@ const Order = orderSchema.Order;
 module.exports.order = async (req, res) => {
     try {
 
-        const { data } = req.body;
-        console.log(data)
+        const { data, userId } = req.body;
 
-        const result = await Order.create(
-            {
-                productId: data
-            }
-        )
+        const result = await Order.create({
+            productId: data,
+            userId
+        })
 
         res.json({
             success: 1,
@@ -29,16 +27,60 @@ module.exports.order = async (req, res) => {
 };
 
 
-// Get Order Data
+// Get Order Data By User Id
 module.exports.getOrderData = async (req, res) => {
     try {
         const id = req.params.id
         // Retrieve all products from the database using the Product model
-        const result = await Order.find({ userId: id }).populate("cartId").select("-createdAt -__v")
+        const result = await Order.find({ userId: id })
 
         res.json({
             success: 1,
             message: "Get Order Successfully",
+            result
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: 0,
+            error: error.message
+        });
+    }
+}
+
+
+// Get All Order Data
+module.exports.getAllOrderData = async (req, res) => {
+    try {
+        const result = await Order.find()
+
+        res.json({
+            success: 1,
+            message: "Get Order Successfully",
+            result
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: 0,
+            error: error.message
+        });
+    }
+}
+
+
+// Update Status in Order
+module.exports.updateStatus = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const { status } = req.body; // Extract the status string from the object
+
+        // Ensure status is a string
+        const statusString = typeof status === 'string' ? status : (status && status.status);
+
+        const result = await Order.updateOne({ _id: id }, { $set: { status: statusString } });
+
+        res.json({
+            success: 1,
+            message: "Update Successfully",
             result
         });
     } catch (error) {

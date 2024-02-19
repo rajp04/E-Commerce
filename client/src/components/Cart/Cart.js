@@ -105,7 +105,7 @@ function Cart() {
         const updateQty = async (id, newQty) => {
             try {
                 const data = { qty: newQty };
-                const response = await axios.patch(`http://localhost:5555/api/v1/cart/updateqty/${id}`, data);
+                const response = await axios.patch(`http://localhost:5555/api/v1/product/updateqty/${id}`, data);
                 setQTY(prevQty => ({ ...prevQty, [id]: response.data.qty }));
                 setReferesh(Math.random())
                 console.log(response);
@@ -116,8 +116,8 @@ function Cart() {
 
         if (cart) {
             cart.forEach(item => {
-                if (item.productId && qty[item._id] !== undefined) {
-                    updateQty(item._id, qty[item._id]);
+                if (item.productId && qty[item.productId._id] !== undefined) {
+                    updateQty(item.productId._id, qty[item.productId._id]);
                 }
             });
         }
@@ -133,7 +133,7 @@ function Cart() {
         if (cart) {
             let sum = 0
             for (const a of cart) {
-                let z = a.productId.price * a.qty
+                let z = a.productId.price * a.productId.qty
                 sum += z
             }
             setSubTotal(sum)
@@ -150,25 +150,23 @@ function Cart() {
     // Order Api
     const handleOrder = async () => {
         try {
-            const data = { data: cart && cart.map(item => item.productId._id) };
-            const response = await axios.post(`http://localhost:5555/api/v1/order/order`, data);
+            const order = { data: cart && cart.map(item => item.productId._id), userId: userId };
+            const response = await axios.post(`http://localhost:5555/api/v1/order/order`, order);
             console.log(response.data);
             if (response.data.success === 1) {
                 // You can uncomment this block if you want to perform additional actions after successful order
-                // try {
-                //     const deleteResponse = await axios.delete(`http://localhost:5555/api/v1/cart/deleteallitem/${userId}`);
-                //     setReferesh(Math.random());
-                //     console.log(deleteResponse);
-                // } catch (deleteError) {
-                //     console.log(deleteError);
-                // }
+                try {
+                    const deleteResponse = await axios.delete(`http://localhost:5555/api/v1/cart/deleteallitem/${userId}`);
+                    setReferesh(Math.random());
+                    console.log(deleteResponse);
+                } catch (deleteError) {
+                    console.log(deleteError);
+                }
             }
         } catch (error) {
             console.log(error);
         }
     }
-
-    console.log(cart);
 
     return (
         <>
@@ -180,15 +178,16 @@ function Cart() {
                 <div className='grid grid-cols-12 gap-5' >
                     <div className='border-2 lg:col-span-9 sm:col-span-8 col-span-12 border-gray-300 bg-white rounded-md p-5'>
                         {cart && cart.map((item) => {
+                            const p = item.productId
                             return (
                                 <>
-                                    <div className='justify-between sm:flex mb-5 pt-2' key={item.productId._id}>
+                                    <div className='justify-between sm:flex mb-5 pt-2' key={item._id}>
                                         <div className='sm:flex justify-center items-center'>
                                             <div className='border-2 border-gray-300 p-1 rounded-md flex items-center justify-center w-fit'>
-                                                <img src={item.productId.image} alt="" className='w-40 h-40' />
+                                                <img src={p.image} alt="" className='w-40 h-40' />
                                             </div>
                                             <div className='ms-3'>
-                                                <h1 className='font-semibold text-xl mb-1'>{item.productId.productName}</h1>
+                                                <h1 className='font-semibold text-xl mb-1'>{p.productName}</h1>
                                                 <p className='text-gray-500'>Size: Medium, Color: Blue, Material: Plastic</p>
                                                 <p className='text-gray-500 mb-2'>Seller: Artel Market</p>
                                                 <div className='flex'>
@@ -199,13 +198,13 @@ function Cart() {
                                         <div>
                                             <div className='flex items-center mt-3'>
                                                 <h1 className='font-semibold text-xl mb-3 text-end'>Price: </h1>
-                                                <h1 className='font-semibold text-xl mb-3 text-end'> {item.productId.price}</h1>
+                                                <h1 className='font-semibold text-xl mb-3 text-end'>{p.price}</h1>
                                             </div>
                                             <div className='flex flex-wrap items-center'>
                                                 <h1 className='font-bold text-2xl pe-2'>Qty:</h1>
                                                 <select
-                                                    value={qty[item._id] || ''}
-                                                    onChange={(e) => handleQtyChange(item._id, e.target.value)}
+                                                    value={qty[item.productId._id] || ''}
+                                                    onChange={(e) => handleQtyChange(item.productId._id, e.target.value)}
                                                     className='border-2 rounded-md border-gray-100 p-1 font-bold text-xl outline-none'>
                                                     {q.map((e, i) => (
                                                         <option key={i} value={e}>{e}</option>
@@ -218,6 +217,7 @@ function Cart() {
                                 </>
                             )
                         })}
+
                         <div className='flex justify-between items-center mt-5'>
                             <button className='flex justify-center items-center space-x-3 bg-blue-500 text-white py-1 px-3 rounded-md'>
                                 <FaArrowLeft />
@@ -254,8 +254,8 @@ function Cart() {
                                 <h1>Total:</h1>
                                 <h1>+ &#8377; {total}</h1>
                             </div>
-                            <div className='flex items-center text-white justify-center bg-green-600 rounded-md py-1 '>
-                                <button className='text-xl font-semibold' onClick={() => handleOrder()}>Checkout</button>
+                            <div className='flex items-center text-white cursor-pointer justify-center bg-green-600 rounded-md py-1 ' onClick={() => handleOrder()}>
+                                <button className='text-xl font-semibold' >Checkout</button>
                             </div>
                         </div>
                     </div>
