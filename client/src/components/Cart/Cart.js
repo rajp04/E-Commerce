@@ -150,16 +150,17 @@ function Cart() {
     // Order Api
     const handleOrder = async () => {
         try {
-            const data = { userId }
+            const data = { data: cart && cart.map(item => item.productId._id) };
             const response = await axios.post(`http://localhost:5555/api/v1/order/order`, data);
             console.log(response.data);
             if (response.data.success === 1) {
+                // You can uncomment this block if you want to perform additional actions after successful order
                 // try {
-                //     const response = await axios.delete(`http://localhost:5555/api/v1/cart/deleteallitem/${userId}`)
+                //     const deleteResponse = await axios.delete(`http://localhost:5555/api/v1/cart/deleteallitem/${userId}`);
                 //     setReferesh(Math.random());
-                //     console.log(response);
-                // } catch (error) {
-                //     console.log(error);
+                //     console.log(deleteResponse);
+                // } catch (deleteError) {
+                //     console.log(deleteError);
                 // }
             }
         } catch (error) {
@@ -167,6 +168,7 @@ function Cart() {
         }
     }
 
+    console.log(cart);
 
     return (
         <>

@@ -64,17 +64,18 @@ function Order() {
             <Header />
             <div className='py-5 px-5 bg-gray-100'>
                 <h1 className='text-4xl font-bold pb-5'>Order History</h1>
-                <div className='grid grid-cols-10 bg-gray-200 rounded-t-md py-1'>
+                <div className='grid grid-cols-12 bg-gray-200 rounded-t-md py-1'>
                     <h1 className='col-span-2 text-xl font-medium text-center'>Product Image</h1>
                     <h1 className='col-span-2 text-xl font-medium text-center'>Product Name</h1>
                     <h1 className='col-span-2 text-xl font-medium text-center'>Size</h1>
                     <h1 className='col-span-2 text-xl font-medium text-center'>Units</h1>
                     <h1 className='col-span-2 text-xl font-medium text-center'>Price</h1>
+                    <h1 className='col-span-2 text-xl font-medium text-center'>Date</h1>
                 </div>
                 {data && data.map((item) => {
                     const e = item.cart.productId
                     return (
-                        <div className='grid grid-cols-10 border-2 bg-white rounded-b-md py-1'>
+                        <div className='grid grid-cols-12 border-2 bg-white rounded-b-md py-1'>
                             <div className='flex justify-center items-center col-span-2'>
                                 <img src={e.image} alt="" />
                             </div>
@@ -85,6 +86,7 @@ function Order() {
                                 <FaIndianRupeeSign />
                                 <h1>{e.price}</h1>
                             </div>
+                            <div className='col-span-2 flex items-center justify-center text-3xl font-bold'>{new Date(e.updatedAt).toLocaleDateString()}</div>
                         </div>
                     )
                 })}
