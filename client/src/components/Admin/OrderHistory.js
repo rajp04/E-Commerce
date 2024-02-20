@@ -63,6 +63,7 @@ function OrderHistory() {
       console.log(id);
       const result = await axios.patch(`http://localhost:5555/api/v1/order/updatestatus/${id}`, data);
       console.log(result);
+      setStatus(result)
     } catch (error) {
       console.error("Error fetching cart data:", error);
     }

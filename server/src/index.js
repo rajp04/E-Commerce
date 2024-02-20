@@ -11,6 +11,7 @@ const adminRouter = require("./routes/adminRoutes.js")
 const productRouter = require("./routes/productRoutes.js")
 const cartRouter = require("./routes/cartRoutes.js")
 const orderRouter = require("./routes/orderRoutes.js")
+const messageRouter = require("./routes/messageRouter.js")
 
 app.use(cors())
 app.use(express.json({ limit: "16kb" }))
@@ -23,6 +24,7 @@ app.use("/api/v1/admin", adminRouter)
 app.use("/api/v1/product", productRouter)
 app.use("/api/v1/cart", cartRouter)
 app.use("/api/v1/order", orderRouter)
+app.use("/api/v1/message", messageRouter)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

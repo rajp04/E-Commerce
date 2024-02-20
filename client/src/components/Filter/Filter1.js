@@ -14,7 +14,7 @@ function Filter1() {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [refresh , setRefresh] = useState()
+    const [refresh, setRefresh] = useState()
     const productData = useSelector((state) => state.product.productData);
     const loading = useSelector((state) => state.product.loading);
     const error = useSelector((state) => state.product.error);
