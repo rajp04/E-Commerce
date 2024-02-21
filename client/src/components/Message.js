@@ -71,7 +71,11 @@ function Message() {
         }
     };
 
-
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleMessage();
+        }
+    };
 
     return (
         <div className='flex h-screen justify-center bg-gray-100'>
@@ -103,7 +107,7 @@ function Message() {
                 </div>
                 < div className='absolute  inset-x-0 mx-52 bottom-2 border-gray-500 flex border-2 rounded-full bg-white' >
                     <h1 className='border-2 rounded-full bg-gray-400  h-12 w-12 text-center text-4xl cursor-pointer'>+</h1>
-                    <input type="text" className='w-full h-12 outline-none ms-2 text-2xl' placeholder='Enter Your Message' value={text} onChange={(e) => setText(e.target.value)} />
+                    <input type="text" className='w-full h-12 outline-none ms-2 text-2xl' placeholder='Enter Your Message' value={text} onChange={(e) => setText(e.target.value)} onKeyDown={handleKeyDown} />
                     <IoSend className='border-2 rounded-full bg-gray-400 p-3 h-12 w-12 cursor-pointer' onClick={() => handleMessage()} type='submit' />
                 </ div>
             </div>
