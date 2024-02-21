@@ -8,49 +8,40 @@ function Message() {
     const [receiver, setReceiver] = useState()
     const [refresh, setRefresh] = useState()
     const [sender, setSender] = useState()
+    const [user, setUser] = useState()
     const [text, setText] = useState('')
-    const id = localStorage.getItem('id')
 
 
-    useEffect(() => {
-        const getMessage = async () => {
-            try {
-                const result = await axios.get(`http://localhost:5555/api/v1/message/getmessage/${id}`);
-                if (result.data.success === 1) {
-                    setReceiver(result.data.result);
-                    // setRefresh(Math.random());
-                } else {
-                    // Handle error or unexpected response
-                    console.error("Failed to fetch message receiver data");
-                }
-            } catch (error) {
-                // Handle network errors or other exceptions
-                console.error("Error fetching message receiver data:", error);
+    const handleUserMessage = async (id) => {
+        try {
+            const result = await axios.get(`http://localhost:5555/api/v1/message/getmessagedata/${id}`);
+            if (result.data.success === 1) {
+                setSender(result.data.result);
+                // setRefresh(Math.random());
+            } else {
+                // Handle error or unexpected response
+                console.error("Failed to fetch message sender data");
             }
-        };
-        getMessage();
-    }, [id, refresh]);
-
-    useEffect(() => {
-        const getMessage = async () => {
-            try {
-                const result = await axios.get(`http://localhost:5555/api/v1/message/getmessagedata/${id}`);
-                if (result.data.success === 1) {
-                    setSender(result.data.result);
-                    // setRefresh(Math.random());
-                } else {
-                    // Handle error or unexpected response
-                    console.error("Failed to fetch message sender data");
-                }
-            } catch (error) {
-                // Handle network errors or other exceptions
-                console.error("Error fetching message sender data:", error);
+        } catch (error) {
+            // Handle network errors or other exceptions
+            console.error("Error fetching message sender data:", error);
+        }
+        try {
+            const result = await axios.get(`http://localhost:5555/api/v1/message/getmessage/${id}`);
+            if (result.data.success === 1) {
+                setReceiver(result.data.result);
+                // setRefresh(Math.random());
+            } else {
+                // Handle error or unexpected response
+                console.error("Failed to fetch message receiver data");
             }
-        };
-        getMessage();
-    }, [id, refresh]);
+        } catch (error) {
+            // Handle network errors or other exceptions
+            console.error("Error fetching message receiver data:", error);
+        }
+    };
 
-    const handleMessage = async () => {
+    const handleMessage = async (id) => {
         try {
             const data = { receiverId: id, message: text };
             const result = await axios.post('http://localhost:5555/api/v1/message/message', data);
@@ -69,15 +60,29 @@ function Message() {
     };
 
 
+    useEffect(() => {
+        const handleUser = async () => {
+            try {
+                const result = await axios.get('http://localhost:5555/api/v1/users/alluserdata');
+                setUser(result.data)
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        handleUser()
+    }, [refresh])
+
+
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
             handleMessage();
         }
     };
 
+
     return (
-        <div className='h-screen pt-20'>
-            <div className='h-full bg-gray-100'>
+        <div className='h-screen pt-20 flex flex-row'>
+            <div className='h-full bg-gray-100 basis-3/4 border-r-2 border-gray-500'>
                 <div className='flex flex-col pt-2 px-2 h-[577px] overflow-scroll'>
                     <div className='w-full'>
                         <div className='w-full float-right flex flex-col items-end'>
@@ -109,6 +114,18 @@ function Message() {
                     <IoSend className='text-5xl text-gray-950 p-1 cursor-pointer' onClick={() => handleMessage()} />
                     <BsEmojiSmileFill className='text-5xl text-gray-950 pe-1 ps-2' />
                 </div>
+            </div>
+            <div className='bg-gray-100 basis-1/4'>
+                {user && user.map((item) => (
+                    <div className='flex items-center space-x-3 ps-5 py-5 border-b-2 cursor-pointer border-gray-400' onClick={() => handleUserMessage(item._id)}>
+                        <img src={item.avatar} alt="" className='h-16 w-16 rounded-full' />
+                        <div>
+                            <h1 className='text-2xl font-medium'>{item.fullName}</h1>
+                            <h1 className='text-green-500'>Online</h1>
+                        </div>
+                    </div>
+                ))}
+
             </div>
         </div>
     );

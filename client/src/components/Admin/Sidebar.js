@@ -14,7 +14,7 @@ function Sidebar() {
     return (
         <div>
             <div className='flex justify-between items-center'>
-                <div className='flex items-center ps-7 py-5'>
+                <div className='flex items-center ps-7 py-5' onClick={() => navigate("/")}>
                     <img src={require('../../image/logo.png')} className='bg-blue-500 p-1 h-8 w-8 rounded-md text-white ' alt="" />
                     <h1 className='text-blue-300 text-3xl font-bold md:ps-2 cursor-pointer'>Brand</h1>
                 </div>

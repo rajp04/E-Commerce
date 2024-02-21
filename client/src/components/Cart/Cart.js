@@ -147,27 +147,6 @@ function Cart() {
     })
 
 
-    // Order Api
-    // const handleOrder = async () => {
-    //     try {
-    //         const order = { data: cart && cart.map(item => item.productId._id), userId: userId };
-    //         const response = await axios.post(`http://localhost:5555/api/v1/order/order`, order);
-    //         console.log(response.data);
-    //         if (response.data.success === 1) {
-    //             // You can uncomment this block if you want to perform additional actions after successful order
-    //             try {
-    //                 const deleteResponse = await axios.delete(`http://localhost:5555/api/v1/cart/deleteallitem/${userId}`);
-    //                 setReferesh(Math.random());
-    //                 console.log(deleteResponse);
-    //             } catch (deleteError) {
-    //                 console.log(deleteError);
-    //             }
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
-
     return (
         <>
             <Header />
@@ -254,7 +233,7 @@ function Cart() {
                                 <h1>Total:</h1>
                                 <h1>+ &#8377; {total}</h1>
                             </div>
-                            <div className='flex items-center text-white cursor-pointer justify-center bg-green-600 rounded-md py-1' onClick={() => naviget("/address")}>
+                            <div className='flex items-center text-white cursor-pointer justify-center bg-green-600 rounded-md py-1' onClick={() => naviget("/address", { state: cart })}>
                                 <button className='text-xl font-semibold' >Checkout</button>
                             </div>
                         </div>

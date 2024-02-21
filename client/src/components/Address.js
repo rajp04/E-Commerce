@@ -1,11 +1,64 @@
-import React from 'react'
-
+import axios from 'axios'
+import React, { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { FaCircleArrowLeft } from "react-icons/fa6";
 function Address() {
+
+    const location = useLocation()
+    console.log(location);
+
+    const navigate = useNavigate()
+    const [firstName, setFirstName] = useState()
+    const [lastName, setLastName] = useState()
+    const [email, setEmail] = useState()
+    const [mobile, setMobile] = useState()
+    const [country, setCountry] = useState()
+    const [address, setAddress] = useState()
+    const [city, setCity] = useState()
+    const [state, setState] = useState()
+    const [postalCode, setPostalCode] = useState()
+
+    const user = localStorage.getItem("id")
+
+    const handleSubmit = async () => {
+        try {
+            const productId = location.state?.productId?._id;
+            if (!productId) {
+                console.log("Product ID is not defined.");
+                return;
+            }
+
+            const order = { firstName, lastName, email, mobile, country, address, city, state, postalCode, productId, userId: user };
+
+            const response = await axios.post(`http://localhost:5555/api/v1/order/order`, order);
+            if (response.data.success === 1) {
+                console.log(response.data);
+                setFirstName('');
+                setLastName('');
+                setEmail('');
+                setMobile('');
+                setCountry('');
+                setAddress('');
+                setCity('');
+                setState('');
+                setPostalCode('');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+
     return (
 
         <div className="border-2 w-3/4 p-5 m-auto border-gray-900/10 pb-12">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">Personal Information</h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600">Use a permanent address where you can receive mail.</p>
+            <div className='flex items-center space-x-3'>
+                <FaCircleArrowLeft className='text-3xl cursor-pointer' onClick={() => navigate("/cart")} />
+                <div className='flex flex-col'>
+                    <h2 className="text-base font-semibold leading-7 text-gray-900">Personal Information</h2>
+                    <p className="mt-1 text-sm leading-6 text-gray-600">Use a permanent address where you can receive mail.</p>
+                </div>
+            </div>
 
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div className="sm:col-span-3">
@@ -18,7 +71,9 @@ function Address() {
                             name="first-name"
                             id="first-name"
                             autoComplete="given-name"
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2"
                         />
                     </div>
                 </div>
@@ -33,7 +88,9 @@ function Address() {
                             name="last-name"
                             id="last-name"
                             autoComplete="family-name"
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2"
                         />
                     </div>
                 </div>
@@ -48,7 +105,25 @@ function Address() {
                             name="email"
                             type="email"
                             autoComplete="email"
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2"
+                        />
+                    </div>
+                </div>
+                <div className="sm:col-span-2">
+                    <label htmlFor="number" className="block text-sm font-medium leading-6 text-gray-900">
+                        Phone number
+                    </label>
+                    <div className="mt-2">
+                        <input
+                            id="number"
+                            name="number"
+                            type="number"
+                            autoComplete="off"
+                            value={mobile}
+                            onChange={(e) => setMobile(e.target.value)}
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2"
                         />
                     </div>
                 </div>
@@ -62,8 +137,11 @@ function Address() {
                             id="country"
                             name="country"
                             autoComplete="country-name"
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                            value={country}
+                            onChange={(e) => setCountry(e.target.value)}
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6 px-2"
                         >
+                            <option>India</option>
                             <option>United States</option>
                             <option>Canada</option>
                             <option>Mexico</option>
@@ -81,7 +159,9 @@ function Address() {
                             name="street-address"
                             id="street-address"
                             autoComplete="street-address"
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2"
                         />
                     </div>
                 </div>
@@ -95,8 +175,10 @@ function Address() {
                             type="text"
                             name="city"
                             id="city"
+                            value={city}
+                            onChange={(e) => setCity(e.target.value)}
                             autoComplete="address-level2"
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2"
                         />
                     </div>
                 </div>
@@ -110,8 +192,10 @@ function Address() {
                             type="text"
                             name="region"
                             id="region"
+                            value={state}
+                            onChange={(e) => setState(e.target.value)}
                             autoComplete="address-level1"
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2"
                         />
                     </div>
                 </div>
@@ -126,12 +210,14 @@ function Address() {
                             name="postal-code"
                             id="postal-code"
                             autoComplete="postal-code"
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            value={postalCode}
+                            onChange={(e) => setPostalCode(e.target.value)}
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2"
                         />
                     </div>
                 </div>
                 <div className='flex justify-center col-span-6 items-center'>
-                    <button className='text-center  px-4 py-1 bg-blue-500 text-white rounded-md text-xl'>Payment</button>
+                    <button type='submit' className='text-center  px-4 py-1 bg-blue-500 text-white rounded-md text-xl' onClick={() => handleSubmit()}>Payment</button>
                 </div>
             </div>
         </div>

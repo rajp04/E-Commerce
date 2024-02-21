@@ -6,11 +6,19 @@ const Order = orderSchema.Order;
 module.exports.order = async (req, res) => {
     try {
 
-        const { data, userId } = req.body;
+        const { productId, userId, firstName, lastName, email, mobile, country, address, city, state, postalCode } = req.body;
 
         const result = await Order.create({
-            productId: data,
-            userId
+            productId,
+            userId,
+            firstName,
+            lastName,
+            email,
+            mobile,
+            address,
+            country,
+            city,
+            state, postalCode
         })
 
         res.json({
