@@ -44,6 +44,7 @@ function Message() {
     const handleMessage = async (id) => {
         try {
             const data = { receiverId: id, message: text };
+            console.log(id);
             const result = await axios.post('http://localhost:5555/api/v1/message/message', data);
             if (result.data.success === 1) {
                 setRefresh(Math.random());

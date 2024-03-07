@@ -75,7 +75,7 @@ module.exports.login = async (req, res) => {
           message: "Login Successfully.",
           user
         });
-      } 
+      }
     } else {
       return res.json({ success: 0, message: "Invalid credentials" });
     }
@@ -264,7 +264,7 @@ module.exports.avatar = async (req, res) => {
 
 
 //User Blocked by admin
-exports.userBlock = async (req, res) => {
+module.exports.userBlock = async (req, res) => {
   const id = req.params.id;
   try {
     // Find the user by ID
