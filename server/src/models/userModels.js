@@ -36,7 +36,11 @@ const userSchema = new mongoose.Schema(
         block: {
             type: Boolean,
             default: true,
-        }
+        },
+        address: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Address"
+        },
     },
     { timestamps: true }
 );
