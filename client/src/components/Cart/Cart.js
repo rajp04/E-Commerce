@@ -182,6 +182,7 @@ function Cart() {
     //     }
     // }
 
+
     return (
         <>
             <Header />
@@ -255,22 +256,41 @@ function Cart() {
                                 <h1>Subtotal:</h1>
                                 <h1>&#8377; {subTotal}</h1>
                             </div>
-                            <div className='flex justify-between pb-1'>
-                                <h1>Discount:</h1>
-                                <h1 className='text-red-500'>- &#8377; 60.00</h1>
-                            </div>
-                            <div className='flex justify-between pb-1'>
-                                <h1>Tax:</h1>
-                                <h1 className='text-green-500'>+ &#8377; 60.00</h1>
-                            </div>
+                            {cart?.length > 0 ? (
+                                <>
+                                    <div className='flex justify-between pb-1'>
+                                        <h1>Discount:</h1>
+                                        <h1 className='text-red-500'>- &#8377; 60.00</h1>
+                                    </div>
+                                    <div className='flex justify-between pb-1'>
+                                        <h1>Tax:</h1>
+                                        <h1 className='text-green-500'>+ &#8377; 60.00</h1>
+                                    </div>
+                                </>
+                            ) : (
+                                <> <div className='flex justify-between pb-1'>
+                                    <h1>Discount:</h1>
+                                    <h1 className='text-red-500'>- &#8377; 00</h1>
+                                </div>
+                                    <div className='flex justify-between pb-1'>
+                                        <h1>Tax:</h1>
+                                        <h1 className='text-green-500'>+ &#8377; 00</h1>
+                                    </div>
+                                </>
+                            )}
                             <hr className='my-3' />
                             <div className='flex justify-between pb-2 font-bold text-lg'>
                                 <h1>Total:</h1>
                                 <h1>+ &#8377; {total}</h1>
                             </div>
-                            <div className='flex items-center text-white cursor-pointer justify-center bg-green-600 rounded-md py-1 ' onClick={() => naviget("/address", { state: address })}>
-                                <button className='text-xl font-semibold' >Checkout</button>
-                            </div>
+                            {cart?.length > 0 ? (
+                                <div className='flex items-center text-white cursor-pointer justify-center bg-green-600 rounded-md py-1 ' onClick={() => naviget("/address", { state: address })}>
+                                    <button className='text-xl font-semibold' >Checkout</button>
+                                </div>
+                            ) : (<div className='flex items-center text-white cursor-not-allowed justify-center bg-green-600 rounded-md py-1 opacity-50' disabled>
+                                <button className='text-xl font-semibold cursor-not-allowed' disabled>Checkout</button>
+                            </div>)
+                            }
                         </div>
                     </div>
                 </div>

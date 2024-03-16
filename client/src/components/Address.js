@@ -26,17 +26,17 @@ function Address() {
         try {
             if (location.state && location.state.data) {
                 const response = await axios.put(`http://localhost:5555/api/v1/address/updateaddress/${id}`, data);
-                if (response) {
+                if (response.data.success === 1) {
                     console.log("Address update successful");
                 } else {
-                    alert("Address failed: Invalid response data");
+                    alert("Address failed: " + response.data.message);
                 }
             } else {
                 const response = await axios.post(`http://localhost:5555/api/v1/address/address/${id}`, data);
                 if (response) {
                     console.log("Address add successful");
                 } else {
-                    alert("Address failed: Invalid response data");
+                    alert("Address failed " + response.data.message);
                 }
             }
         } catch (error) {
