@@ -3,6 +3,8 @@ import image from "../image/images.jpg";
 import { TiArrowLeftThick } from "react-icons/ti";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from "react-toastify";
+
 
 function ChangePassword() {
     const navigate = useNavigate()
@@ -22,14 +24,15 @@ function ChangePassword() {
         try {
             const response = await axios.patch(`http://localhost:5555/api/v1/users/updatepassword/${id}`, data);
 
-            if (response.data) {
-                window.location.reload();
-                console.log("Change Password successfully");
+            if (response.data.success === 1) {
+                toast("Change Password successfully");
+                setNewPassword("")
+                setPassword("")
             } else {
-                console.log("Invalid data");
+                toast("Change Password Failed " + response.data.message);
             }
         } catch (error) {
-            console.error(error);
+            toast(error);
         }
     };
 

@@ -12,5 +12,7 @@ router.route("/alluserdata").get(userController.usersData);
 router.route("/userdata/:id").get(userController.userByID);
 router.route("/avatar/:id").patch(upload.upload.single('avatar'), userController.avatar);
 router.route("/userblock/:id").patch(userController.userBlock);
+router.route("/sendotp").patch(userController.sendOtp);
+router.route("/forgetpassword").post(userController.forgetPassword);
 
 module.exports = router;

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import image from "../image/images.jpg";
 import axios from "axios";
 import { BiSolidHide, BiSolidShow } from "react-icons/bi";
+import { toast } from "react-toastify";
 
 function Login() {
   const navigate = useNavigate();
@@ -16,20 +17,19 @@ function Login() {
     if (user) navigate("/");
   })
 
-  const login = async (e) => {
-    e.preventDefault();
+  const login = async () => {
     const data = { mobile, password };
     try {
       const response = await axios.post("http://localhost:5555/api/v1/users/login", data);
-      if (response) {
-        localStorage.setItem('id', response.data.user._id);
-        console.log("Login successful");
+      if (response.data.success === 1) {
+        localStorage.setItem("id", response.data.loggedInUser._id)
+        toast("Login successful");
         navigate("/");
       } else {
-        alert("Login failed: Invalid response data");
+        toast("Login failed: " + response.data.message);
       }
     } catch (error) {
-      alert("An error occurred during login:", error.message);
+      toast("An error occurred during login:", error.message);
     }
   };
 
@@ -79,7 +79,7 @@ function Login() {
               {visible ? <BiSolidShow /> : <BiSolidHide />}
             </div>
           </div>
-          <h1 className="text-red-500 mb-2 text-end">Forget Password</h1>
+          <h1 className="text-red-500 mb-2 text-end cursor-pointer" onClick={() => navigate("/forgetpassword")}>Forget Password</h1>
           <button className="bg-blue-600 py-1 rounded-md text-white text-xl" type="submit" onClick={login}>
             Login
           </button>

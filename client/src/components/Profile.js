@@ -3,6 +3,8 @@ import image from "../image/images.jpg";
 import { TiArrowLeftThick } from "react-icons/ti";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from "react-toastify";
+
 
 function Profile() {
     const [data, setData] = useState()
@@ -24,14 +26,16 @@ function Profile() {
         try {
             const response = await axios.patch(`http://localhost:5555/api/v1/users/updateuser/${id}`, data);
 
-            if (response.data) {
-                window.location.reload();
-                console.log("Profile updated successfully");
+            if (response.data.success === 1) {
+                toast("Profile updated successfully");
+                setEmail("")
+                setFullName("")
+                setMobile("")
             } else {
-                console.log("Invalid data");
+                toast("Profile Update Failed " + response.data.message);
             }
         } catch (error) {
-            console.error(error);
+            toast(error);
         }
     };
 
@@ -45,7 +49,7 @@ function Profile() {
         getUserData()
     }, [id])
 
-    console.log(data);
+
     return (
         <div className="flex flex-col px-4 items-center  py-10 bg-cover bg-fixed bg-no-repeat"
             style={{ backgroundImage: `url(${image})`, height: "100vh" }}

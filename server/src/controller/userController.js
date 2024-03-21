@@ -1,5 +1,6 @@
 const { compare } = require("bcrypt");
 const userSchema = require("../models/userModels.js");
+const { sendOtp } = require("../utils/sendOTP.js");
 const User = userSchema.User;
 
 // Register Controller 
@@ -30,8 +31,8 @@ module.exports.register = async (req, res) => {
       fullName,
       email,
       mobile,
-      password,
-    });
+      password
+    })
 
     // Respond with success message and additional information
     res.json({
@@ -53,32 +54,58 @@ module.exports.register = async (req, res) => {
 // Login Controller
 module.exports.login = async (req, res) => {
   try {
-    const { mobile, password } = req.body;
+    const { password, mobile } = req.body;
 
-    if (!mobile || !password) {
+    // Check if either email or mobile is provided
+    if (!password && !mobile) {
       return res.json({
         success: 0,
         message: "Please Enter the Mobile Number and Password"
       });
     }
 
+    // Find user by email or mobile
     const user = await User.findOne({ mobile });
-    if (user) {
-      if (user.block == 0) {
-        return res.json({
-          success: 0,
-          message: "Something went wrong.",
-        });
-      } else {
-        return res.json({
-          success: 1,
-          message: "Login Successfully.",
-          user
-        });
-      }
-    } else {
+
+    // If user not found, throw error
+    if (!user) {
       return res.json({ success: 0, message: "Invalid credentials" });
     }
+
+    // User are check block 
+    if (user.block === 1) {
+      return res.json({
+        success: 0,
+        message: "Your account is blocked. Please contact support.",
+      });
+    }
+
+    // // Check if password is valid
+    const isPassword = await user.isPasswordCorrect(password);
+
+    // If password is not valid, throw error
+    if (!isPassword) {
+      return res.json({ success: 0, message: "Invalid credentials" });
+    }
+
+    // Update last login
+    const update = await User.updateOne(
+      { _id: user._id },
+      { $set: { lastLogin: new Date() } }
+    );
+
+    if (update.modifiedCount !== 1) {
+      throw new Error("Failed to update last login");
+    }
+
+    // Fetch logged in user details
+    const loggedInUser = await User.findById(user._id).select("-password -__v");
+
+    return res.json({
+      success: 1,
+      message: "Login Successful",
+      loggedInUser
+    })
   } catch (error) {
     // Log the error message for debugging
     res.json({
@@ -137,6 +164,14 @@ module.exports.updatePassword = async (req, res) => {
         success: 0,
         message: "User not found.",
       });
+    }
+
+    // Check if password is valid
+    const isPassword = await user.isPasswordCorrect(password);
+
+    // If password is not valid, throw error
+    if (!isPassword) {
+      return res.json({ success: 0, message: "Invalid credentials" });
     }
 
     if (password === newPassword) {
@@ -299,3 +334,114 @@ module.exports.userBlock = async (req, res) => {
     });
   }
 };
+
+
+// Forget Password
+module.exports.forgetPassword = async (req, res) => {
+  try {
+    const { mobile, otp, password } = req.body;
+
+    // Check if all required fields are provided
+    if (!mobile || !password || !otp) {
+      return res.json({
+        success: 0,
+        message: "All fields are required",
+      });
+    }
+
+    // Check password length
+    if (password.length < 6) {
+      return res.json({
+        success: 0,
+        message: "Password must be at least 6 characters"
+      });
+    }
+
+    // Find user by mobile number
+    let user = await User.findOne({ mobile });
+
+    if (!user) {
+      return res.json({
+        success: 0,
+        message: "Invalid Mobile Number",
+      });
+    }
+
+    // Check if OTP provided by the user matches the OTP stored in the user document
+    if (user.otp != otp) {
+      return res.json({
+        success: 0,
+        message: "Invalid Otp",
+      });
+    }
+
+    // Update user's password
+    user.password = password;
+
+    // Set OTP to null after successful password change
+    user.otp = null;
+
+    await user.save(); // Save the user document with the new password and null OTP
+
+    return res.json({
+      success: 1,
+      message: "Password reset successfully",
+    });
+
+  } catch (error) {
+    return res.json({
+      success: 0,
+      message: error.message,
+    });
+  }
+}
+
+
+// Otp Send Controller
+module.exports.sendOtp = async (req, res) => {
+  const { mobile } = req.body;
+
+  if (!mobile) {
+    return res.json({
+      success: 0,
+      message: "Mobile number is required",
+    });
+  }
+
+  try {
+    // Find user by mobile number
+    const user = await User.findOne({ mobile });
+
+    if (!user) {
+      return res.json({
+        success: 0,
+        message: "User not found",
+      });
+    }
+
+    // Generate a new OTP code
+    const newOtp = Math.floor(100000 + Math.random() * 900000);
+
+    // Send the OTP via SMS
+    const isSent = await sendOtp(mobile, newOtp);
+
+    // Check if the OTP was successfully sent
+    if (!isSent) {
+      return res.status(500).json({ success: 0, message: "Error in sending OTP" });
+    }
+
+    // Update the user's OTP in the database
+    user.otp = newOtp;
+    await user.save();
+
+    // Respond with success message if everything went smoothly
+    return res.json({
+      success: 1,
+      message: "OTP sent successfully",
+    });
+  } catch (error) {
+    // Handle any errors that occur during the OTP generation and sending process
+    console.error(error);
+    return res.status(500).json({ success: 0, message: "Internal Server Error" });
+  }
+}

@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { BiSolidHide, BiSolidShow } from "react-icons/bi";
+import { toast } from "react-toastify";
 
 const signUpSchema = Yup.object({
   fullName: Yup.string().min(2).max(25).required("Please enter your name"),
@@ -36,14 +37,13 @@ function Register() {
           );
 
           if (res.data.success === 1) {
-            console.log("User registered successfully!", res)
+            toast("User registered successfully!")
             navigate("/login");
           } else {
-            console.log(res.data);
+            toast(res.data.message)
           }
         } catch (error) {
-          console.error("Error during   registration:", error);
-          console.log("Error during registration. Please try again.");
+          toast("Error during registration:", error);
         }
         action.resetForm();
       },
@@ -151,7 +151,7 @@ function Register() {
               className="bg-blue-600 mt-3 py-1 rounded-md text-white text-xl"
               type="submit"
             >
-              Verify mobile number
+              Submit
             </button>
             <h1 className="mt-5">
               Already have an account?{" "}

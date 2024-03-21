@@ -1,4 +1,6 @@
 import React from 'react'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Route, Routes } from 'react-router-dom'
 import Home from './components/Home'
 import View from './components/Views/View'
@@ -22,7 +24,7 @@ import AdminMessage from './components/Admin/Message.js'
 import Message from './components/Message.js'
 import Order from './components/Order.js'
 import Address from './components/Address.js'
-
+import ForgetPassword from './components/ForgetPassword.js'
 function App() {
     return (
         <>
@@ -39,6 +41,7 @@ function App() {
                 <Route path='/order' element={<Order />} />
                 <Route path='/address' element={<Address />} />
                 <Route path='/changepassword' element={<ChangePassword />} />
+                <Route path='/forgetpassword' element={<ForgetPassword />} />
                 <Route path='/admin/login' element={<AdminLogin />} />
                 <Route path='/admin/' element={<Dashboard />} >
                     <Route path='' element={<Homes />} />
@@ -51,6 +54,7 @@ function App() {
                     <Route path='message' element={<AdminMessage />} />
                 </Route>
             </Routes>
+            <ToastContainer />
         </>
     )
 }

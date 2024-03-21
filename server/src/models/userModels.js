@@ -35,24 +35,34 @@ const userSchema = new mongoose.Schema(
         },
         block: {
             type: Boolean,
-            default: true,
+            default: false,
         },
         address: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Address"
         },
+        lastLogin: {
+            type: String,
+            default: null
+        },
+        otpExpires: {
+            type: String,
+            default: null
+        },
     },
     { timestamps: true }
 );
 
+//  Password hashing
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
-    this.password = await bcrypt.hash(this.password, 10);
-    next();
-});
+    this.password = await bcrypt.hash(this.password, 10)
+    next()
+})
 
+// Compare The Password of Login
 userSchema.methods.isPasswordCorrect = async function (password) {
-    return await bcrypt.compare(password, this.password);
-};
+    return await bcrypt.compare(password, this.password)
+}
 
 exports.User = mongoose.model("User", userSchema);

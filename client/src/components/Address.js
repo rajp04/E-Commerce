@@ -19,29 +19,72 @@ function Address() {
 
     const id = localStorage.getItem("id");
 
+    const loadScript = (src) => {
+        return new Promise((resolve) => {
+            const script = document.createElement("script");
+            script.src = src;
+
+            script.onload = () => {
+                resolve(true);
+            };
+            script.onerror = () => {
+                resolve(false);
+            };
+            document.body.appendChild(script);
+        });
+    };
+
+    const displayRazorpay = async (amount) => {
+
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = { firstName, lastName, email, mobile, country, streetAddress, city, state, zip };
 
-        try {
-            if (location.state && location.state.data) {
-                const response = await axios.put(`http://localhost:5555/api/v1/address/updateaddress/${id}`, data);
-                if (response.data.success === 1) {
-                    console.log("Address update successful");
-                } else {
-                    alert("Address failed: " + response.data.message);
-                }
-            } else {
-                const response = await axios.post(`http://localhost:5555/api/v1/address/address/${id}`, data);
-                if (response) {
-                    console.log("Address add successful");
-                } else {
-                    alert("Address failed " + response.data.message);
-                }
-            }
-        } catch (error) {
-            alert("An error occurred during Address: " + error.message);
+        const res = await loadScript(
+            "https://checkout.razorpay.com/v1/checkout.js"
+        );
+        if (!res) {
+            alert("you are offline");
+            return;
         }
+
+        const option = {
+            key: "rzp_test_h8oCH07ToOB8X5",
+            currency: "INR",
+            amount: 100,    
+            name: "PhoneX",
+            description: "Thanks for buying products from the our website",
+            image: "",
+            handler: async function (response) {
+                try {
+                    if (location.state && location.state.data) {
+                        const response = await axios.put(`http://localhost:5555/api/v1/address/updateaddress/${id}`, data);
+                        if (response.data.success === 1) {
+                            console.log("Address update successful");
+                        } else {
+                            alert("Address failed: " + response.data.message);
+                        }
+                    } else {
+                        const response = await axios.post(`http://localhost:5555/api/v1/address/address/${id}`, data);
+                        if (response) {
+                            console.log("Address add successful");
+                        } else {
+                            alert("Address failed " + response.data.message);
+                        }
+                    }
+                } catch (error) {
+                    alert("An error occurred during Address: " + error.message);
+                }
+            },
+            prefill: {
+                name: "hello",
+            },
+        };
+
+        const paymentObject = new window.Razorpay(option);
+        paymentObject.open();
     }
 
     return (

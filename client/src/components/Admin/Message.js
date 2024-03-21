@@ -3,6 +3,7 @@ import { IoIosAddCircle } from "react-icons/io";
 import { BsEmojiSmileFill } from "react-icons/bs";
 import { IoSend } from "react-icons/io5";
 import axios from 'axios';
+import { toast } from "react-toastify";
 
 function Message() {
     const [receiver, setReceiver] = useState()
@@ -10,57 +11,9 @@ function Message() {
     const [sender, setSender] = useState()
     const [user, setUser] = useState()
     const [text, setText] = useState('')
+    const [ids, setIds] = useState()
 
-
-    const handleUserMessage = async (id) => {
-        try {
-            const result = await axios.get(`http://localhost:5555/api/v1/message/getmessagedata/${id}`);
-            if (result.data.success === 1) {
-                setSender(result.data.result);
-                // setRefresh(Math.random());
-            } else {
-                // Handle error or unexpected response
-                console.error("Failed to fetch message sender data");
-            }
-        } catch (error) {
-            // Handle network errors or other exceptions
-            console.error("Error fetching message sender data:", error);
-        }
-        try {
-            const result = await axios.get(`http://localhost:5555/api/v1/message/getmessage/${id}`);
-            if (result.data.success === 1) {
-                setReceiver(result.data.result);
-                // setRefresh(Math.random());
-            } else {
-                // Handle error or unexpected response
-                console.error("Failed to fetch message receiver data");
-            }
-        } catch (error) {
-            // Handle network errors or other exceptions
-            console.error("Error fetching message receiver data:", error);
-        }
-    };
-
-    const handleMessage = async (id) => {
-        try {
-            const data = { receiverId: id, message: text };
-            console.log(id);
-            const result = await axios.post('http://localhost:5555/api/v1/message/message', data);
-            if (result.data.success === 1) {
-                setRefresh(Math.random());
-                setText('');
-                console.log(result);
-            } else {
-                // Handle error or unexpected response
-                console.error("Failed to send message:", result.data.error);
-            }
-        } catch (error) {
-            // Handle network errors or other exceptions
-            console.error("Error sending message:", error);
-        }
-    };
-
-
+    // All User get
     useEffect(() => {
         const handleUser = async () => {
             try {
@@ -73,6 +26,48 @@ function Message() {
         handleUser()
     }, [refresh])
 
+    // All Message Get
+    const handleUserMessage = async (id) => {
+        try {
+            setIds(id)
+            const result = await axios.get(`http://localhost:5555/api/v1/message/getmessagedata/${id}`);
+            if (result.data.success === 1) {
+                setSender(result.data.result);
+                setRefresh(Math.random());
+            } else {
+                toast("Failed to fetch message sender data " + result.data.message);
+            }
+        } catch (error) {
+            toast("Error fetching message sender data:", error);
+        }
+        try {
+            const result = await axios.get(`http://localhost:5555/api/v1/message/getmessage/${id}`);
+            if (result.data.success === 1) {
+                setReceiver(result.data.result);
+                setRefresh(Math.random());
+            } else {
+                toast("Failed to fetch message receiver data " + result.data.message);
+            }
+        } catch (error) {
+            toast("Error fetching message receiver data:", error);
+        }
+    };
+
+    // Message Send 
+    const handleMessage = async () => {
+        try {
+            const data = { receiverId: ids, message: text };
+            const result = await axios.post('http://localhost:5555/api/v1/message/message', data);
+            if (result.data.success === 1) {
+                setRefresh(Math.random());
+                setText('');
+            } else {
+                toast("Failed to send message:", result.data.error);
+            }
+        } catch (error) {
+            toast("Error sending message:", error);
+        }
+    };
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
@@ -112,7 +107,7 @@ function Message() {
                             onKeyDown={handleKeyDown} // Add this line
                         />
                     </div>
-                    <IoSend className='text-5xl text-gray-950 p-1 cursor-pointer' onClick={() => handleMessage()} />
+                    < IoSend className='text-5xl text-gray-950 p-1 cursor-pointer' onClick={() => handleMessage()} />
                     <BsEmojiSmileFill className='text-5xl text-gray-950 pe-1 ps-2' />
                 </div>
             </div>

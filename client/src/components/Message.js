@@ -4,12 +4,13 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaCircleArrowLeft } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from "react-toastify";
 
 
 function Message() {
     const navigate = useNavigate()
     const [receiver, setReceiver] = useState()
-    const [refresh, setRefresh] = useState()
+    // const [refresh, setRefresh] = useState()
     const [sender, setSender] = useState()
     const [text, setText] = useState('')
     const id = localStorage.getItem('id')
@@ -23,16 +24,14 @@ function Message() {
                     setReceiver(result.data.result);
                     // setRefresh(Math.random());
                 } else {
-                    // Handle error or unexpected response
-                    console.error("Failed to fetch message receiver data");
+                    toast("Failed to fetch message receiver data");
                 }
             } catch (error) {
-                // Handle network errors or other exceptions
-                console.error("Error fetching message receiver data:", error);
+                toast("Error fetching message receiver data:", error);
             }
         };
         getMessage();
-    }, [id, refresh]);
+    }, [id]);
 
     useEffect(() => {
         const getMessage = async () => {
@@ -42,32 +41,27 @@ function Message() {
                     setSender(result.data.result);
                     // setRefresh(Math.random());
                 } else {
-                    // Handle error or unexpected response
-                    console.error("Failed to fetch message sender data");
+                    toast("Failed to fetch message sender data");
                 }
             } catch (error) {
-                // Handle network errors or other exceptions
-                console.error("Error fetching message sender data:", error);
+                toast("Error fetching message sender data:", error);
             }
         };
         getMessage();
-    }, [id, refresh]);
+    }, [id]);
 
     const handleMessage = async () => {
         try {
             const data = { senderId: id, message: text };
             const result = await axios.post('http://localhost:5555/api/v1/message/message', data);
             if (result.data.success === 1) {
-                setRefresh(Math.random());
+                // setRefresh(Math.random());
                 setText('');
-                console.log(result);
             } else {
-                // Handle error or unexpected response
-                console.error("Failed to send message:", result.data.error);
+                toast("Failed to send message:", result.data.error);
             }
         } catch (error) {
-            // Handle network errors or other exceptions
-            console.error("Error sending message:", error);
+            toast("Error sending message:", error);
         }
     };
 
