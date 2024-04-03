@@ -64,7 +64,7 @@ function Order() {
     }, [order, product]);
 
 
-    console.log(data, "abc");
+    // console.log(data, "abc");
 
     return (
         <>

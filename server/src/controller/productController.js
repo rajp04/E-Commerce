@@ -48,16 +48,26 @@ module.exports.addProduct = async (req, res) => {
 };
 
 
-// All Product Controller
+// Get All Product Controller
 module.exports.product = async (req, res) => {
     try {
+
+        const page = parseInt(req.query.page);
+        const size = parseInt(req.query.size);
+
+        const skip = (page - 1) * size;
+
+        const total = await Product.countDocuments();
         // Retrieve all products from the database using the Product model
-        const result = await Product.find();
+        const result = await Product.find().skip(skip).limit(size);
 
         // Respond with a success message and the retrieved products
         res.status(200).json({
             success: 1,
-            result
+            result,
+            total,
+            page,
+            size
         });
 
     } catch (error) {

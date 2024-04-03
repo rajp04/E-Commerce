@@ -39,7 +39,7 @@ function User() {
     return <div>Error: {error}</div>;
   }
 
-  console.log(userData);
+  // console.log(userData);
 
   const handleBlock = async (id) => {
     try {

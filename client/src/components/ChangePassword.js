@@ -46,7 +46,7 @@ function ChangePassword() {
                     <h1 className='font-semibold text-3xl '>Change Password</h1>
                 </div>
                 <div className='flex flex-col pt-5'>
-                    <h1 className='font-semibold text-2xl pb-1'>Password:</h1>
+                    <h1 className='font-semibold text-2xl pb-1'>Old Password:</h1>
                     <input type="text" className='ps-2 p-1 text-xl font-medium outline-none border-2 rounded-md' value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>
                 <div className='flex flex-col pt-5'>

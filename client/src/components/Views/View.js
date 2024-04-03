@@ -13,6 +13,7 @@ import Header from '../Header';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 function View() {
 
@@ -30,9 +31,9 @@ function View() {
         const data = { userId, productId };
         // console.log(userId, productId);
         try {
-            const result = await axios.post("http://localhost:5555/api/v1/cart/addcart", data);
+            await axios.post("http://localhost:5555/api/v1/cart/addcart", data);
             setRefresh(Math.random())
-            console.log(result);
+            toast.success("Prpduct Add Successfully")
         } catch (error) {
             console.error("Error making the request:", error.message);
         }
@@ -54,8 +55,8 @@ function View() {
         const data = { userIdForSave, productIdForSave };
         // console.log(userIdForSave, productIdForSave);
         try {
-            const result = await axios.post("http://localhost:5555/api/v1/cart/addsave", data);
-            console.log(result);
+            await axios.post("http://localhost:5555/api/v1/cart/addsave", data);
+            toast.success("Product Add Save for Later")
         } catch (error) {
             console.error("Error making the request:", error.message);
         }

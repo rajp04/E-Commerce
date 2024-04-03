@@ -8,6 +8,7 @@ import { MdMessage, MdOutlineShoppingCart } from "react-icons/md";
 import Header from '../Header';
 import Footer from '../Footer';
 import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 function Cart() {
     const [cart, setCart] = useState()
@@ -39,9 +40,9 @@ function Cart() {
     const handleDelete = async (id) => {
 
         try {
-            const response = await axios.delete(`http://localhost:5555/api/v1/cart/deletecart/${id}`);
+            await axios.delete(`http://localhost:5555/api/v1/cart/deletecart/${id}`);
             setReferesh(Math.random());
-            console.log(response);
+            toast("Remove successfully")
         } catch (error) {
             console.log(error);
         }
@@ -92,9 +93,9 @@ function Cart() {
         const data = { userId, productId };
 
         try {
-            const result = await axios.post("http://localhost:5555/api/v1/cart/addcart", data);
+            await axios.post("http://localhost:5555/api/v1/cart/addcart", data);
             setReferesh(Math.random());
-            console.log(result);
+            toast.success("Add Successfully")
         } catch (error) {
             console.error("Error making the request:", error.message);
         }

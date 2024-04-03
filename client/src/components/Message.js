@@ -9,56 +9,34 @@ import { toast } from "react-toastify";
 
 function Message() {
     const navigate = useNavigate()
-    const [receiver, setReceiver] = useState()
-    // const [refresh, setRefresh] = useState()
-    const [sender, setSender] = useState()
+    const [data, setData] = useState()
     const [text, setText] = useState('')
     const id = localStorage.getItem('id')
 
-
     useEffect(() => {
-        const getMessage = async () => {
+        const handleUserMessage = async () => {
             try {
-                const result = await axios.get(`http://localhost:5555/api/v1/message/getmessage/${id}`);
-                if (result.data.success === 1) {
-                    setReceiver(result.data.result);
-                    // setRefresh(Math.random());
+                const result = await axios.get(`http://localhost:5555/api/v1/message/getallmessage`);
+                if (result?.data.success === 1) {
+                    setData(result.data.result);
                 } else {
-                    toast("Failed to fetch message receiver data");
+                    toast("Failed to fetch message sender data " + result.data.message);
                 }
             } catch (error) {
-                toast("Error fetching message receiver data:", error);
+                console.log("Error fetching message sender data: " + error);
             }
         };
-        getMessage();
-    }, [id]);
-
-    useEffect(() => {
-        const getMessage = async () => {
-            try {
-                const result = await axios.get(`http://localhost:5555/api/v1/message/getmessagedata/${id}`);
-                if (result.data.success === 1) {
-                    setSender(result.data.result);
-                    // setRefresh(Math.random());
-                } else {
-                    toast("Failed to fetch message sender data");
-                }
-            } catch (error) {
-                toast("Error fetching message sender data:", error);
-            }
-        };
-        getMessage();
-    }, [id]);
+        handleUserMessage();
+    });
 
     const handleMessage = async () => {
         try {
             const data = { senderId: id, message: text };
             const result = await axios.post('http://localhost:5555/api/v1/message/message', data);
             if (result.data.success === 1) {
-                // setRefresh(Math.random());
                 setText('');
             } else {
-                toast("Failed to send message:", result.data.error);
+                toast("Failed to send message:", result.data.message);
             }
         } catch (error) {
             toast("Error sending message:", error);
@@ -87,17 +65,28 @@ function Message() {
                         <BsThreeDotsVertical />
                     </div>
                 </div>
-                <div className='overflow-y-scroll h-5/6 relative pt-2'>
-                    <div className='flex flex-col '>
-                        {receiver && receiver.map((item) => (
-                            <h1 className='ms-3 w-fit mb-2 text-white text-3xl rounded-full py-1 px-3 bg-blue-500'>{item.message}</h1>
-                        ))}
-                    </div>
-                    <div className='float-right flex flex-col items-end w-1/2'>
-                        {sender && sender.map((item) => (
-                            <h1 className='me-3 mb-2 text-white text-3xl rounded-full py-1 px-3 bg-blue-500 w-fit'>{item.message}</h1>
-                        ))}
-                    </div>
+                <div className='overflow-y-scroll h-5/6 relative pt-2 px-2'>
+                    {data && data.map((item, index) => (
+                        <>
+                            {
+                                item.senderId === id ?
+                                    <div className='w-full'>
+                                        <div className='w-[75%] float-right flex flex-col items-end'>
+                                            <h1 key={index + item._id} className='bg-blue-500 float-right w-fit rounded-xl text-2xl py-1 px-3 mt-2 text-white '>{item.message}</h1>
+                                        </div>
+                                    </div>
+                                    : <>
+                                        {item.receiverId === id ?
+                                            <div className='w-full'>
+                                                <div className='w-[75%] flex flex-col'>
+                                                    <h1 key={index + item._id} className='bg-blue-500 w-fit rounded-xl  text-2xl py-1 mt-2 px-3 text-white'>{item.message}</h1>
+                                                </div>
+                                            </div> : <></>
+                                        }
+                                    </>
+                            }
+                        </>
+                    ))}
                 </div>
                 < div className='absolute  inset-x-0 mx-52 bottom-2 border-gray-500 flex border-2 rounded-full bg-white' >
                     <h1 className='border-2 rounded-full bg-gray-400  h-12 w-12 text-center text-4xl cursor-pointer'>+</h1>

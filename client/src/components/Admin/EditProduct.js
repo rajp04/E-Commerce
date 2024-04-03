@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 
 function AddProduct() {
   const { state } = useLocation()
-  console.log(state);
+  // console.log(state);
   // State for form fields
   const [productName, setProductName] = useState(state?.productName);
   const [description, setDescription] = useState(state?.description);

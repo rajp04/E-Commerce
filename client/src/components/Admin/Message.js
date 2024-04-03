@@ -1,57 +1,43 @@
-import React, { useEffect, useState } from 'react'
-import { IoIosAddCircle } from "react-icons/io";
-import { BsEmojiSmileFill } from "react-icons/bs";
+import React, { useEffect, useState } from 'react';
 import { IoSend } from "react-icons/io5";
 import axios from 'axios';
 import { toast } from "react-toastify";
 
 function Message() {
-    const [receiver, setReceiver] = useState()
-    const [refresh, setRefresh] = useState()
-    const [sender, setSender] = useState()
-    const [user, setUser] = useState()
-    const [text, setText] = useState('')
-    const [ids, setIds] = useState()
+    const [message, setMessage] = useState([]);
+    const [user, setUser] = useState([]);
+    const [text, setText] = useState('');
+    const [ids, setIds] = useState('');
 
     // All User get
     useEffect(() => {
         const handleUser = async () => {
             try {
                 const result = await axios.get('http://localhost:5555/api/v1/users/alluserdata');
-                setUser(result.data)
+                setUser(result.data);
             } catch (error) {
                 console.log(error);
             }
-        }
-        handleUser()
-    }, [refresh])
+        };
+        handleUser();
+    });
 
     // All Message Get
-    const handleUserMessage = async (id) => {
-        try {
-            setIds(id)
-            const result = await axios.get(`http://localhost:5555/api/v1/message/getmessagedata/${id}`);
-            if (result.data.success === 1) {
-                setSender(result.data.result);
-                setRefresh(Math.random());
-            } else {
-                toast("Failed to fetch message sender data " + result.data.message);
+    useEffect(() => {
+        const handleUserMessage = async () => {
+            try {
+                const result = await axios.get(`http://localhost:5555/api/v1/message/getallmessage`);
+                if (result?.data.success === 1) {
+                    setMessage(result.data.result);
+                } else {
+                    toast("Failed to fetch message sender data " + result.data.message);
+                }
+            } catch (error) {
+                console.log("Error fetching message sender data: " + error);
             }
-        } catch (error) {
-            toast("Error fetching message sender data:", error);
-        }
-        try {
-            const result = await axios.get(`http://localhost:5555/api/v1/message/getmessage/${id}`);
-            if (result.data.success === 1) {
-                setReceiver(result.data.result);
-                setRefresh(Math.random());
-            } else {
-                toast("Failed to fetch message receiver data " + result.data.message);
-            }
-        } catch (error) {
-            toast("Error fetching message receiver data:", error);
-        }
-    };
+        };
+        handleUserMessage();
+    });
 
     // Message Send 
     const handleMessage = async () => {
@@ -59,13 +45,13 @@ function Message() {
             const data = { receiverId: ids, message: text };
             const result = await axios.post('http://localhost:5555/api/v1/message/message', data);
             if (result.data.success === 1) {
-                setRefresh(Math.random());
+                // setRefresh(Math.random());
                 setText('');
             } else {
-                toast("Failed to send message:", result.data.error);
+                toast("Failed to send message: " + result.data.message);
             }
         } catch (error) {
-            toast("Error sending message:", error);
+            toast.error("Error sending message: " + error);
         }
     };
 
@@ -77,54 +63,70 @@ function Message() {
 
 
     return (
-        <div className='h-screen pt-20 flex flex-row'>
-            <div className='h-full bg-gray-100 basis-3/4 border-r-2 border-gray-500'>
-                <div className='flex flex-col pt-2 px-2 h-[577px] overflow-scroll'>
-                    <div className='w-full'>
-                        <div className='w-full float-right flex flex-col items-end'>
-                            {receiver && receiver.map((item, index) => (
-                                <h1 key={index} className='bg-blue-500 float-right w-fit rounded-xl text-2xl py-1 px-3 mt-2 '>{item.message}</h1>
-                            ))}
-                        </div>
-                    </div>
-                    <div className='w-full'>
-                        <div className='w-full flex flex-col'>
-                            {sender && sender.map((item, index) => (
-                                <h1 key={index} className='bg-blue-500 w-fit rounded-xl  text-2xl py-1 mt-2 px-3 '>{item.message}</h1>
-                            ))}
-                        </div>
+        <div className='w-full h-screen flex flex-row pt-20 relative'>
+            <div className='basis-3/4 left-0 overflow-y-scroll border-e-2 pb-14'>
+                <div className='w-full'>
+                    <div className='flex flex-col p-2'>
+                        {ids && message?.map((item, index) => (
+                            <>
+                                {item?.senderId === ids ?
+                                    <div className='mb-2 w-[75%]'>
+                                        <h1 key={index + item._id} className='bg-blue-500 max-w-fit rounded-md text-xl px-2 py-1 text-white'>
+                                            {item.message}
+                                        </h1>
+                                    </div>
+
+                                    : <>
+                                        {item?.receiverId === ids ?
+                                            <div className='w-full flex justify-end'>
+                                                <div className='w-[75%] flex justify-end mb-2'>
+                                                    <h1 key={index + item._id} className='py-1 max-w-fit  px-2 rounded-md text-white text-xl bg-blue-500'>
+                                                        {item.message}
+                                                    </h1>
+                                                </div>
+                                            </div>
+                                            : <></>
+                                        }
+                                    </>
+                                }
+                            </>
+                        ))}
+
                     </div>
                 </div>
-                <div className='bg-gray-500 flex py-3 px-5'>
-                    <IoIosAddCircle className='text-5xl text-gray-950' />
-                    <div className='flex w-full ps-5'>
-                        <input
-                            type="text"
-                            className='bg-gray-400 rounded-xl px-2 py-2 outline-none text-2xl font-medium w-full placeholder:text-gray-500'
-                            placeholder='Type a message'
+                <div className='h-[8vh] w-[75%] absolute bg-red-500 bottom-0 left-0 overflow-hidden'>
+                    <div className='h-full flex items-center justify-center w-full border-2 bg-gray-300 py-2'>
+                        <div className='text-2xl px-2'>😊</div>
+                        <input type="text" className='w-full h-full outline-none rounded-sm py-1 px-2' placeholder='Type a message'
                             value={text}
                             onChange={(e) => setText(e.target.value)}
-                            onKeyDown={handleKeyDown} // Add this line
-                        />
+                            onKeyDown={handleKeyDown} />
+                        <IoSend className='text-2xl mx-2' onClick={() => handleMessage()} />
                     </div>
-                    < IoSend className='text-5xl text-gray-950 p-1 cursor-pointer' onClick={() => handleMessage()} />
-                    <BsEmojiSmileFill className='text-5xl text-gray-950 pe-1 ps-2' />
                 </div>
             </div>
-            <div className='bg-gray-100 basis-1/4'>
-                {user && user.map((item) => (
-                    <div className='flex items-center space-x-3 ps-5 py-5 border-b-2 cursor-pointer border-gray-400' onClick={() => handleUserMessage(item._id)}>
-                        <img src={item.avatar} alt="" className='h-16 w-16 rounded-full' />
-                        <div>
-                            <h1 className='text-2xl font-medium'>{item.fullName}</h1>
-                            <h1 className='text-green-500'>Online</h1>
-                        </div>
-                    </div>
-                ))}
 
+            {/* User */}
+            <div className='basis-1/4 overflow-y-scroll'>
+                <div className='bg-gray-100'>
+                    {user &&
+                        user
+                            .filter(item =>
+                                message.some(msg => msg.senderId === item._id)
+                            )
+                            .map(item => (
+                                <div key={item._id} className='flex items-center space-x-3 ps-5 py-5 border-b-2 cursor-pointer border-gray-400' onClick={() => setIds(item._id)}>
+                                    <img src={item.avatar} alt="" className='h-16 w-16 rounded-full' />
+                                    <div>
+                                        <h1 className='text-2xl font-medium'>{item.fullName}</h1>
+                                        <h1 className='text-green-500'>Online</h1>
+                                    </div>
+                                </div>
+                            ))}
+                </div>
             </div>
         </div>
     );
 };
 
-export default Message
+export default Message;
